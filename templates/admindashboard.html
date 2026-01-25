@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; }
+        header { background:#007bff; color:white; padding:1rem; text-align:center; }
+        main { padding:2rem; max-width:1200px; margin:0 auto; }
+        .card { background:white; padding:1.5rem; margin-bottom:1.5rem; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+        table { width:100%; border-collapse: collapse; margin-top:1rem; font-size:0.9rem; }
+        th, td { border:1px solid #ddd; padding:0.75rem; text-align:left; }
+        th { background:#f8f9fa; font-weight:600; }
+        tr:hover { background:#f8f9fa; }
+        .status-badge { padding:4px 8px; border-radius:4px; font-size:0.8rem; }
+        .paid { background:#d4edda; color:#155724; }
+        .pending { background:#fff3cd; color:#856404; }
+        .requested { background:#cce5ff; color:#004085; }
+        .summary-stats { display:flex; gap:1rem; margin-bottom:1.5rem; }
+        .stat-box { flex:1; background:white; padding:1rem; border-radius:8px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+        .stat-number { font-size:2rem; font-weight:bold; margin:0.5rem 0; }
+        .refresh-btn { background:#28a745; color:white; border:none; padding:0.5rem 1rem; border-radius:4px; cursor:pointer; margin-bottom:1rem; }
+        .refresh-btn:hover { background:#218838; }
+        .loading { text-align:center; padding:2rem; color:#6c757d; }
+        .loading:after { content:'...'; animation:dots 1.5s steps(4, end) infinite; }
+        @keyframes dots { 0%, 20% { color:rgba(0,0,0,0); text-shadow:.25em 0 0 rgba(0,0,0,0),.5em 0 0 rgba(0,0,0,0); } 40% { color:black; text-shadow:.25em 0 0 rgba(0,0,0,0),.5em 0 0 rgba(0,0,0,0); } 60% { text-shadow:.25em 0 0 black,.5em 0 0 rgba(0,0,0,0); } 80%,100% { text-shadow:.25em 0 0 black,.5em 0 0 black; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <p>Upgrade Requests & Payment Monitoring</p>
+    </header>
+
+    <main>
+        <button onclick="loadUpgradeSummary()" class="refresh-btn">🔄 Refresh Data</button>
+        
+        <div class="summary-stats" id="summary-stats">
+            <div class="stat-box">
+                <h3>Total Requests</h3>
+                <div class="stat-number" id="total-requests">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Awaiting Payment</h3>
+                <div class="stat-number" id="awaiting-payment">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Paid (Verify)</h3>
+                <div class="stat-number" id="paid-verify">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Verified</h3>
+                <div class="stat-number" id="verified">0</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Upgrade Requests Summary</h2>
+            <div id="upgrade-summary">
+                <div class="loading">Loading upgrade requests...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase -->
+    <script type="module" src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+    
+    <!-- Upgrade Payments Summary -->
+    <script type="module" src="{{ url_for('static', filename='js/admin/upgradePaymentsSummary.js') }}"></script>
+</body>
+</html>

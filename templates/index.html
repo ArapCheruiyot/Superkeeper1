@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superkeeper - Inventory POS for Small Businesses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    <style>
+        /* Mobile-optimized CSS included inline for reliability */
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #2ed573;
+            --danger: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #333;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 15px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+        
+        .cta-nav {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .tagline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tag {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        
+        .highlight {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .stat {
+            background: var(--success);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .benefit {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .benefit h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .benefit p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .hero-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 25px 0;
+        }
+        
+        .cta-primary, .cta-secondary {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        
+        .cta-primary {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .cta-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .social-proof {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .avatars {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .avatars img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: -8px;
+        }
+        
+        .avatars img:first-child {
+            margin-left: 0;
+        }
+        
+        .hero-visual {
+            margin-top: 30px;
+        }
+        
+        .visual-comparison {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .before, .after {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .visual-label {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .paper-notebook {
+            width: 150px;
+            height: 200px;
+            background: white;
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .paper-notebook:after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: linear-gradient(transparent 95%, #ccc 95%);
+            background-size: 100% 20px;
+        }
+        
+        .phone-mockup {
+            width: 150px;
+            height: 200px;
+            background: #222;
+            margin: 0 auto 15px;
+            border-radius: 20px;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        .phone-mockup img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--success);
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        /* SECTIONS */
+        section {
+            padding: 60px 20px;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .section-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* STORY SECTION */
+        .story-section {
+            background: var(--light);
+        }
+        
+        .story-timeline {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .story-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .story-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .founder-quote {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .quote-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .founder-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .founder-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        
+        /* FEATURES */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid var(--light);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        /* PRICING - UPDATED 5-TIER MODEL */
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .pricing-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .pricing-card.popular {
+            border: 3px solid #667eea;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .pricing-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #667eea;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .price-sub {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin: 0 0 25px;
+            padding: 0;
+            flex-grow: 1;
+        }
+        
+        .features-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .pricing-cta {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            margin-top: auto;
+        }
+        
+        .pricing-cta.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+        
+        .pricing-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .payment-note {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        .pricing-card.free-tier {
+            border: 2px dashed #ccc;
+        }
+        
+        .free-tier .price {
+            color: #2ed573;
+        }
+        
+        /* ANNUAL DISCOUNT */
+        .annual-discount {
+            background: linear-gradient(135deg, #2ed573, #1dd1a1);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .discount-examples {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .example {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .price-old {
+            text-decoration: line-through;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .price-new {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .savings {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        /* TESTIMONIALS */
+        .testimonial-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .testimonial-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        
+        /* FINAL CTA */
+        .final-cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .cta-large {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 18px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .cta-note {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: #222;
+            color: white;
+            padding: 40px 20px 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-brand img {
+            margin-bottom: 15px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .footer-column h4 {
+            margin-bottom: 15px;
+            color: #ccc;
+            font-size: 16px;
+        }
+        
+        .footer-column a {
+            display: block;
+            color: #999;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        /* RESPONSIVE */
+        @media (min-width: 768px) {
+            .main-nav {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 0;
+            }
+            
+            .nav-links {
+                gap: 25px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .hero-cta {
+                flex-direction: row;
+            }
+            
+            .visual-comparison {
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+            }
+            
+            .before, .after {
+                margin-bottom: 0;
+            }
+            
+            .arrow {
+                margin: 0;
+            }
+            
+            .story-timeline {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .features-grid, .testimonial-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .pricing-cards {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .footer-content {
+                grid-template-columns: 2fr 3fr;
+            }
+            
+            .footer-links {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .hero-content {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .hero-text {
+                flex: 1;
+            }
+            
+            .hero-visual {
+                flex: 1;
+                margin-top: 0;
+            }
+            
+            .features-grid, .testimonial-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <nav class="main-nav">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Superkeeper Logo" width="150">
+            
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#story">Our Story</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#testimonials">Success Stories</a>
+            </div>
+            
+            <button class="cta-nav" onclick="document.getElementById('google-signin-btn').click()">
+                Get Started Free
+            </button>
+        </nav>
+
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="tagline">
+                    <span class="tag">Made for small spaces</span>
+                    <span class="tag">Big on features</span>
+                </div>
+                
+                <h1>
+                    From <span class="highlight">Market Stall</span> to 
+                    <span class="highlight">Supermarket</span> – 
+                    One Simple System
+                </h1>
+                
+                <p class="subtitle">
+                    <span class="stat">500+</span> small shops already tracking inventory on phones. 
+                    No computers. No experts. Just your mobile and dreams.
+                </p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit">
+                        <div class="benefit-icon">📱</div>
+                        <h3>Mobile-First</h3>
+                        <p>Works anywhere – even without internet</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="benefit-icon">👥</div>
+                        <h3>Staff Ready</h3>
+                        <p>Add employees with one tap, control what they see</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="benefit-icon">📈</div>
+                        <h3>Grows With You</h3>
+                        <p>Start free, upgrade as you expand</p>
+                    </div>
+                </div>
+                
+                <div class="hero-cta">
+                    <button id="google-signin-btn" class="cta-primary">
+                        <span>Start Free – No Credit Card</span>
+                    </button>
+                    <button id="staff-signin-btn" class="cta-secondary" onclick="window.location.href='/staff-login'">
+                        <span>Staff Login</span>
+                    </button>
+                </div>
+                
+                <div class="social-proof">
+                    <div class="avatars">
+                        <img src="https://i.pravatar.cc/30?img=1" alt="User">
+                        <img src="https://i.pravatar.cc/30?img=2" alt="User">
+                        <img src="https://i.pravatar.cc/30?img=3" alt="User">
+                        <img src="https://i.pravatar.cc/30?img=4" alt="User">
+                    </div>
+                    <p>Trusted by <strong>shop owners</strong> across Nairobi, Mombasa, Kampala</p>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="visual-comparison">
+                    <div class="before">
+                        <div class="visual-label">Before</div>
+                        <div class="visual-content">
+                            <div class="paper-notebook"></div>
+                            <p>Paper chaos, lost receipts, guesswork</p>
+                        </div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="after">
+                        <div class="visual-label">After Superkeeper</div>
+                        <div class="visual-content">
+                            <div class="phone-mockup">
+                                <img src="{{ url_for('static', filename='images/app-screenshot.png') }}" 
+                                     alt="Superkeeper App Dashboard"
+                                     onerror="this.style.display='none'; this.parentElement.innerHTML='📱 App Preview';">
+                            </div>
+                            <p>Real-time stock, staff tracking, sales insights</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE STORY SECTION -->
+    <section class="story-section" id="story">
+        <div class="container">
+            <div class="section-header">
+                <h2>Built in a Small Room, For Every Small Business</h2>
+                <p class="section-subtitle">Our founder's journey from frustration to solution</p>
+            </div>
+            
+            <div class="story-timeline">
+                <div class="story-card">
+                    <div class="story-number">01</div>
+                    <h3>The Problem</h3>
+                    <p>"I watched small shop owners struggle with paper records. They needed something simple, affordable, and mobile-first."</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-number">02</div>
+                    <h3>The Vision</h3>
+                    <p>"What if every business, no matter how small, could have enterprise-grade tools? No installations. Just their phone."</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-number">03</div>
+                    <h3>The Solution</h3>
+                    <p>"Superkeeper was born: a mobile POS that works anywhere, grows with you, and puts business intelligence in your pocket."</p>
+                </div>
+            </div>
+            
+            <div class="founder-quote">
+                <div class="quote-content">
+                    <p class="quote-text">"We're not just building software. We're enabling dreams. Every shilling a business saves helps a family. Every minute saved creates opportunity."</p>
+                    <div class="founder-info">
+                        <img src="{{ url_for('static', filename='images/founder.png') }}" 
+                             alt="Moses Kipkorir Cheruiyot"
+                             onerror="this.src='https://i.pravatar.cc/60?img=11'">
+                        <div>
+                            <h4>MOSES KIPKORIR CHERUIYOT</h4>
+                            <p>Founder, Superkeeper</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need, Nothing You Don't</h2>
+                <p class="section-subtitle">Designed for simplicity, built to scale</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📸</div>
+                    <h3>Snap & Track</h3>
+                    <p>Take photos of items. We track them automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👮‍♂️</div>
+                    <h3>Staff Control</h3>
+                    <p>RBAC system - control what each employee can see/do.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Smart Alerts</h3>
+                    <p>Low stock alerts prevent lost sales.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Sales Tracking</h3>
+                    <p>Track cash & digital payments in one place.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Works Offline</h3>
+                    <p>Syncs when back online - no internet needed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Grows With You</h3>
+                    <p>From 10 items to 10,000 items - same system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION - UPDATED 5-TIER MODEL -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Pay Per Seat - Grow As You Grow</h2>
+                <p class="section-subtitle">Only pay for active users. Cancel anytime.</p>
+            </div>
+            
+            <div class="pricing-cards">
+                <!-- TIER 1: SOLO (FREE) -->
+                <div class="pricing-card free-tier">
+                    <div class="pricing-header">
+                        <h3>Solo</h3>
+                        <div class="price">FREE</div>
+                        <p class="price-sub">For individual entrepreneurs</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ <strong>1 seat only</strong> (owner)</li>
+                        <li>✓ Up to 50 items</li>
+                        <li>✓ Basic stock tracking</li>
+                        <li>✓ Mobile app access</li>
+                        <li>✗ No concurrent staff access</li>
+                        <li>✗ No priority support</li>
+                    </ul>
+                    <button class="pricing-cta" onclick="document.getElementById('google-signin-btn').click()">
+                        Start Free
+                    </button>
+                </div>
+                
+                <!-- TIER 2: DUO (KSh 250) -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Duo</h3>
+                        <div class="price">KSh 250<span>/month</span></div>
+                        <p class="price-sub">Small shop + 1 employee</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ <strong>2 concurrent seats</strong></li>
+                        <li>✓ Up to 200 items</li>
+                        <li>✓ Basic staff access</li>
+                        <li>✓ Stock alerts</li>
+                        <li>✓ WhatsApp support</li>
+                        <li>✓ Data backup</li>
+                    </ul>
+                    <button class="pricing-cta primary" onclick="showPaymentModal(250, 'Duo Plan')">
+                        Pay via M-Pesa
+                    </button>
+                    <p class="payment-note">
+                        Best for: Family shops
+                    </p>
+                </div>
+                
+                <!-- TIER 3: TEAM (KSh 500) - MOST POPULAR -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="pricing-header">
+                        <h3>Team</h3>
+                        <div class="price">KSh 500<span>/month</span></div>
+                        <p class="price-sub">Growing business with team</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ <strong>3-5 concurrent seats</strong></li>
+                        <li>✓ Up to 500 items</li>
+                        <li>✓ Multiple staff roles (RBAC)</li>
+                        <li>✓ Sales reports & analytics</li>
+                        <li>✓ Data export (CSV/Excel)</li>
+                        <li>✓ Priority WhatsApp support</li>
+                    </ul>
+                    <button class="pricing-cta primary" onclick="showPaymentModal(500, 'Team Plan')">
+                        Pay via M-Pesa
+                    </button>
+                    <p class="payment-note">
+                        Best value for growing businesses
+                    </p>
+                </div>
+                
+                <!-- TIER 4: BUSINESS (KSh 1,000) -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Business</h3>
+                        <div class="price">KSh 1,000<span>/month</span></div>
+                        <p class="price-sub">Multiple counters/locations</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ <strong>6-10 concurrent seats</strong></li>
+                        <li>✓ Unlimited items</li>
+                        <li>✓ Advanced analytics dashboard</li>
+                        <li>✓ Multi-location support</li>
+                        <li>✓ Custom categories</li>
+                        <li>✓ 24/7 phone support</li>
+                    </ul>
+                    <button class="pricing-cta primary" onclick="showPaymentModal(1000, 'Business Plan')">
+                        Pay via M-Pesa
+                    </button>
+                    <p class="payment-note">
+                        For established businesses
+                    </p>
+                </div>
+                
+                <!-- TIER 5: ENTERPRISE (KSh 3,000) -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">KSh 3,000<span>/month</span></div>
+                        <p class="price-sub">Supermarkets & large operations</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ <strong>11-20 concurrent seats</strong></li>
+                        <li>✓ Unlimited everything</li>
+                        <li>✓ API access</li>
+                        <li>✓ Dedicated account manager</li>
+                        <li>✓ Custom feature requests</li>
+                        <li>✓ On-site training available</li>
+                    </ul>
+                    <button class="pricing-cta" onclick="showContactModal()">
+                        Contact Us
+                    </button>
+                    <p class="payment-note">
+                        Custom solutions available
+                    </p>
+                </div>
+            </div>
+            
+            <!-- ANNUAL DISCOUNT BANNER -->
+            <div class="annual-discount">
+                <div class="discount-content">
+                    <h3>💸 Save 20% with Annual Payment!</h3>
+                    <p>Pay for 12 months, get 2 months free. Perfect for stable businesses.</p>
+                    <div class="discount-examples">
+                        <div class="example">
+                            <span class="plan">Duo Plan</span>
+                            <span class="price-old">KSh 3,000/year</span>
+                            <span class="price-new">KSh 2,400/year</span>
+                            <span class="savings">Save KSh 600!</span>
+                        </div>
+                        <div class="example">
+                            <span class="plan">Team Plan</span>
+                            <span class="price-old">KSh 6,000/year</span>
+                            <span class="price-new">KSh 4,800/year</span>
+                            <span class="savings">Save KSh 1,200!</span>
+                        </div>
+                    </div>
+                    <p class="small-note">Ask about annual billing after you sign up</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SUCCESS STORIES -->
+    <section class="testimonials-section" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>From Paper to Profit</h2>
+                <p class="section-subtitle">Real shops. Real results.</p>
+            </div>
+            
+            <div class="testimonial-cards">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"I used to lose count of my vegetables every day. Now I know exactly what's selling."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/50?img=5" alt="Mama Nelly">
+                        <div>
+                            <h4>Mama Nelly</h4>
+                            <p>Vegetable Stall, Nairobi</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Adding my two employees was so easy. Now I can track everything from my phone."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/50?img=6" alt="John">
+                        <div>
+                            <h4>John Mwangi</h4>
+                            <p>Electronics Shop, Mombasa</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"The low stock alerts saved me three times last week. I never run out anymore!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/50?img=7" alt="Sarah">
+                        <div>
+                            <h4>Sarah Akinyi</h4>
+                            <p>Boutique, Kampala</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Transform Your Business?</h2>
+            <p>Join shop owners who said goodbye to paper chaos</p>
+            <div class="cta-buttons">
+                <button id="google-signin-btn-final" class="cta-large">
+                    <span>Start Free Today</span>
+                </button>
+                <p class="cta-note">No credit card required. Set up in 5 minutes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Superkeeper Logo" width="120">
+                    <p>Inventory & POS for businesses that start small and dream big.</p>
+                    <div class="social-links">
+                        <a href="https://youtube.com/@superkeeper">YouTube</a>
+                        <a href="https://facebook.com/superkeeper">Facebook</a>
+                        <a href="https://wa.me/254114932232">WhatsApp</a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#pricing">Pricing</a>
+                        <a href="#">Updates</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <a href="#">Help Center</a>
+                        <a href="https://wa.me/254114932232">WhatsApp: 0114932232</a>
+                        <a href="mailto:cheruiyot171@gmail.com">Email Us</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="#story">Our Story</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Careers</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 Superkeeper. Built with ❤️ for small businesses.</p>
+                <p><a href="/impact" style="color: #999; text-decoration: none;">Learn about our social impact programs</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script type="module" src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
+    
+    <script>
+        // Connect all CTA buttons
+        document.getElementById('google-signin-btn-final').addEventListener('click', function() {
+            document.getElementById('google-signin-btn').click();
+        });
+        
+        // Payment Modal Function
+        function showPaymentModal(amount, planName) {
+            const modal = `
+                <div class="payment-modal-overlay">
+                    <div class="payment-modal">
+                        <div class="modal-header">
+                            <h3>🚀 Upgrade to ${planName}</h3>
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="payment-steps">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h4>Send Payment</h4>
+                                        <p>Send <strong>KSh ${amount}</strong> to:</p>
+                                        <div class="mpesa-number">0114932232</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h4>WhatsApp Receipt</h4>
+                                        <p>Screenshot M-Pesa confirmation and send to:</p>
+                                        <div class="whatsapp-link">
+                                            <a href="https://wa.me/254114932232?text=Superkeeper%20Payment%20for%20${planName}%20-%20KSh%20${amount}" target="_blank">
+                                                WhatsApp: 0114932232
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h4>Get Activated</h4>
+                                        <p>We'll activate your ${planName} within 1 hour of receiving payment.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-notes">
+                                <p><strong>Note:</strong> Include your shop name in WhatsApp message</p>
+                                <p>Need help? Call: <strong>0114932232</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Create modal
+            const modalEl = document.createElement('div');
+            modalEl.innerHTML = modal;
+            document.body.appendChild(modalEl);
+            
+            // Close button
+            modalEl.querySelector('.close-modal').addEventListener('click', () => {
+                document.body.removeChild(modalEl);
+            });
+            
+            // Close on overlay click
+            modalEl.querySelector('.payment-modal-overlay').addEventListener('click', (e) => {
+                if (e.target === modalEl.querySelector('.payment-modal-overlay')) {
+                    document.body.removeChild(modalEl);
+                }
+            });
+            
+            // Add modal styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .payment-modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    padding: 20px;
+                }
+                
+                .payment-modal {
+                    background: white;
+                    border-radius: 15px;
+                    max-width: 500px;
+                    width: 100%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                }
+                
+                .modal-header {
+                    padding: 20px;
+                    border-bottom: 1px solid #eee;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .modal-header h3 {
+                    margin: 0;
+                    color: #667eea;
+                }
+                
+                .close-modal {
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #666;
+                }
+                
+                .modal-body {
+                    padding: 20px;
+                }
+                
+                .payment-steps {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    margin: 20px 0;
+                }
+                
+                .step {
+                    display: flex;
+                    gap: 15px;
+                    align-items: flex-start;
+                }
+                
+                .step-number {
+                    background: #667eea;
+                    color: white;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    flex-shrink: 0;
+                }
+                
+                .mpesa-number {
+                    background: #f8f9fa;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    font-family: monospace;
+                    font-size: 18px;
+                    margin: 10px 0;
+                    border: 2px dashed #667eea;
+                    text-align: center;
+                }
+                
+                .whatsapp-link a {
+                    display: inline-block;
+                    background: #25D366;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    margin: 10px 0;
+                }
+                
+                .payment-notes {
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin-top: 20px;
+                    font-size: 14px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Contact Modal
+        function showContactModal() {
+            alert('Contact us for Enterprise solutions:\n\nWhatsApp: 0114932232\nEmail: cheruiyot171@gmail.com\n\nWe\'ll create a custom plan for your business!');
+        }
+    </script>
+</body>
+</html>

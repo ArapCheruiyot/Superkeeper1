@@ -1,0 +1,268 @@
+:root {
+  --item-close-offset: 72px;
+  --nav-height: 60px; /* fallback; will be updated by JS when navbar grows (staff card) */
+}
+
+/* ------------------------------
+   General Dashboard Styles
+-------------------------------*/
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f6fa;
+    color: #333;
+    padding-top: var(--nav-height); /* was 60px */
+}
+
+/* ------------------------------
+   Navbar
+-------------------------------*/
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #4285F4;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 4000;
+}
+
+.nav-left #user-name { font-weight: bold; font-size: 1rem; }
+
+.nav-right button {
+    background-color: white;
+    color: #4285F4;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.nav-right button:hover { background-color: #f1f1f1; }
+
+/* ------------------------------
+   Header
+-------------------------------*/
+header { text-align: center; padding: 30px 20px; }
+header h1 { font-size: 2rem; margin-bottom: 8px; color: #222; }
+header p { font-size: 1rem; color: #555; }
+
+/* ------------------------------
+   Action Buttons
+-------------------------------*/
+.action-buttons { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; margin: 40px 0; }
+
+.red-btn { background-color: #e53935; color: white; font-size: 1.5rem; font-weight: bold; border: none; border-radius: 50%; width: 140px; height: 140px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; }
+.red-btn:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.25); }
+
+.blue-btn { background-color: #1e88e5; color: white; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 12px; padding: 25px 50px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; }
+.blue-btn:hover { transform: scale(1.03); box-shadow: 0 6px 12px rgba(0,0,0,0.25); }
+
+/* ------------------------------
+   Overlay
+-------------------------------*/
+.overlay {
+  position: fixed;
+  top: var(--nav-height); /* was 60px */
+  left: 0;
+  width: 100%;
+  height: calc(100% - var(--nav-height)); /* was calc(100% - 60px) */
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
+  pointer-events: auto;
+}
+.overlay.hidden { display: none !important; }
+
+.overlay-content {
+  background: white;
+  width: 100%;
+  height: 90%;
+  position: relative;
+  padding: 16px;
+  overflow-y: auto;
+  z-index: 1001;
+}
+.overlay-content.hidden { display: none !important; }
+
+/* ------------------------------
+   Categories Button
+-------------------------------*/
+.categories-btn { background-color: #43a047; color: white; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; position: absolute; top: 16px; left: 16px; z-index: 1002; }
+.categories-btn:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.25); }
+
+/* ------------------------------
+   Categories & Subcategories
+-------------------------------*/
+.categories-list { margin-top: 60px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+
+.category-item { background-color: #f1f1f1; padding: 8px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; min-width: 150px; }
+.category-item:hover { background-color: #e0e0e0; }
+
+.children { margin-top: 6px; margin-left: 25px; border-left: 2px dashed #ccc; padding-left: 12px; }
+.children .category-item { background-color: #e8f5e9; margin: 4px 0; padding: 4px 8px; border-radius: 4px; }
+
+.item { background-color: #d1c4e9; padding: 4px 8px; border-radius: 4px; margin: 4px 0; font-size: 0.9rem; font-weight: normal; display: block; margin-left: 20px; cursor: pointer; }
+
+/* ------------------------------
+   Item Detail Full-Screen Overlay
+   (improved stacking and close/edit layout)
+-------------------------------*/
+.item-detail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 2100;               /* ensure item-detail sits above overlay-content */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: auto;
+    pointer-events: auto;
+}
+.item-detail.hidden { display: none !important; }
+
+.item-detail-header {
+    display: flex;
+    justify-content: flex-start; /* keep header content left-aligned; edit button is absolutely positioned */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+}
+.item-detail h3 { margin: 0; font-size: 1.5rem; color: #222; }
+.item-detail p { margin: 6px 0; font-size: 1rem; color: #555; }
+
+/* Close X centered across the top */
+.close-x {
+    position: absolute;
+    top: 10px;
+    left: 40%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.08s;
+    z-index: 2120;               /* above edit button and content */
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.95);
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.06);
+    pointer-events: auto;
+}
+.close-x:hover { color: #e53935; transform: translate(-50%, -1px); }
+
+/* Edit button remains top-right */
+.edit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2110;
+    background-color: #1e88e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.08s;
+    pointer-events: auto;
+}
+.edit-btn:hover { background-color: #1565c0; transform: translateY(-1px); }
+
+/* Ensure header text has left padding so it doesn't collide with absolute controls */
+.item-detail-header > h3 { padding-left: 6px; }
+
+/* ------------------------------
+   Item Detail Enhancements
+-------------------------------*/
+.item-images { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.image-slot { position: relative; display: flex; flex-direction: column; align-items: flex-start; }
+.image-slot img { max-width: 180px; border-radius: 6px; border: 1px solid #ddd; display: block; }
+.image-slot .placeholder { width: 180px; height: 120px; display: flex; align-items: center; justify-content: center; background: #fafafa; border: 1px dashed #ddd; color: #999; border-radius: 6px; }
+
+.retake-btn { margin-top: 8px; background-color: #f57c00; color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
+.retake-btn:hover { background-color: #ef6c00; }
+
+/* ------------------------------
+   Prices Section
+-------------------------------*/
+.item-prices { margin-top: 10px; align-self: flex-start; }
+.item-prices p { margin: 4px 0; font-size: 1rem; color: #444; }
+.item-prices a { display: inline-block; margin-top: 10px; color: #1e88e5; font-weight: bold; text-decoration: none; }
+.item-prices a:hover { text-decoration: underline; }
+
+/* Editable inputs inside item detail */
+#item-meta label { display: flex; flex-direction: column; font-size: 0.9rem; color: #333; font-weight: 500; }
+#item-meta input { margin-top: 6px; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; width: 220px; }
+
+/* Upload image button */
+#upload-image-btn { margin-top: 10px; background-color: #43a047; color: white; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; align-self: flex-start; }
+#upload-image-btn:hover { background-color: #2e7d32; }
+
+/* ------------------------------
+   Transaction Overlay
+-------------------------------*/
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 3000; }
+.modal.hidden { display: none !important; }
+
+.modal-content { background: white; padding: 20px; border-radius: 8px; width: 400px; text-align: center; position: relative; }
+#transaction-overlay .modal-content { width: 520px; max-height: 80%; overflow-y: auto; text-align: left; }
+
+#transaction-title { margin-bottom: 16px; font-size: 1.4rem; font-weight: bold; color: #222; }
+#transaction-list { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #fafafa; max-height: 300px; overflow-y: auto; }
+#transaction-list p { margin: 6px 0; font-size: 0.95rem; color: #555; }
+
+#add-transaction-btn { background-color: #43a047; color: white; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
+#add-transaction-btn:hover { background-color: #2e7d32; }
+
+/* ------------------------------
+   Modal controls and danger styles
+-------------------------------*/
+.modal-content h3 { margin-bottom: 16px; }
+.modal-content button { margin: 6px; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background-color: #f1f1f1; transition: background-color 0.2s; }
+.modal-content button:hover { background-color: #e0e0e0; opacity: 0.9; }
+
+.danger-btn { background-color: #e53935; color: white; }
+.danger-btn:hover { background-color: #c62828; }
+
+/* ------------------------------
+   Hidden state utility
+-------------------------------*/
+.hidden { display: none; }
+
+/* ------------------------------
+   Responsive adjustments
+-------------------------------*/
+@media (max-width: 720px) {
+  :root { --item-close-offset: 64px; }
+  .item-detail { padding: 14px; }
+  .close-x { width: 40px; height: 40px; font-size: 1.25rem; top: 10px; left: 50%; transform: translateX(-50%); }
+  .edit-btn { right: 10px; padding: 5px 10px; }
+}
+
+@media (max-width: 480px) {
+  :root { --item-close-offset: 48px; }
+  .item-detail { padding: 12px; }
+  .close-x { width: 36px; height: 36px; font-size: 1.1rem; top: 8px; left: 50%; transform: translateX(-50%); }
+  .edit-btn { right: 8px; top: 8px; padding: 5px 8px; font-size: 14px; }
+  #item-meta input { width: 160px; }
+}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>Superkeeper Dashboard</title>
+
+    <!-- Styles -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    />
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/itemDetailOverlay.css') }}"
+    />
+
+
+    <!-- Cloudinary Upload Widget -->
+    <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <span id="user-name">Welcome, User</span>
+        </div>
+        <div class="nav-right">
+            <button id="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header>
+        <div>
+            <h1>Superkeeper Dashboard</h1>
+            <p>You are now logged in!</p>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+        <div class="action-buttons">
+            <button id="sell-btn" class="red-btn">Sell</button>
+            <button id="manage-stock-btn" class="blue-btn">
+                Manage Stock
+            </button>
+        </div>
+
+        <!-- STOCK OVERLAY -->
+        <div id="overlay" class="overlay hidden">
+            <div class="overlay-content hidden">
+                <button id="categories-btn" class="categories-btn">
+                    + Categories
+                </button>
+                <div
+                    id="categories-list"
+                    class="categories-list"
+                ></div>
+            </div>
+
+            <!-- ITEM DETAIL OVERLAY -->
+            <div
+                id="item-detail"
+                class="item-detail hidden"
+                aria-hidden="true"
+            >
+                <div class="item-detail-header">
+                    <h3 id="item-name"></h3>
+                    <button
+                        id="edit-toggle-btn"
+                        class="edit-btn"
+                    >
+                        Edit
+                    </button>
+                </div>
+
+                <div id="item-meta" class="item-meta">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TRANSACTION OVERLAY -->
+    <div
+        id="transaction-overlay"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+        <div class="modal-content">
+            <span
+                id="close-transaction"
+                class="close-x"
+                role="button"
+                aria-label="Close"
+            >
+                &times;
+            </span>
+
+            <h3 id="transaction-title"></h3>
+            <div id="transaction-list"></div>
+
+            <button id="add-transaction-btn">
+                + Add Transaction
+            </button>
+        </div>
+    </div>
+
+    <!-- CATEGORY MODAL -->
+    <div
+        id="category-modal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+        <div class="modal-content">
+            <span
+                id="close-modal-x"
+                class="close-x"
+                role="button"
+                aria-label="Close"
+            >
+                &times;
+            </span>
+
+            <h3 id="modal-title"></h3>
+
+            <button id="add-subcategory-btn">
+                + Subcategory
+            </button>
+            <button id="add-item-btn">
+                + Item
+            </button>
+            <button
+                id="delete-category-btn"
+                class="danger-btn"
+            >
+                Delete Category
+            </button>
+        </div>
+    </div>
+
+    <!-- CORE SCRIPTS -->
+    <script
+        type="module"
+        src="{{ url_for('static', filename='js/firebase-config.js') }}"
+    ></script>
+
+    <script
+        type="module"
+        src="{{ url_for('static', filename='js/categorisedItems.js') }}"
+    ></script>
+
+    <script
+        type="module"
+        src="{{ url_for('static', filename='js/homePageNavigationBar.js') }}"
+    ></script>
+
+    <script
+        type="module"
+        src="{{ url_for('static', filename='js/shopnameManage.js') }}"
+    ></script>
+
+    <script
+        type="module"
+        src="{{ url_for('static', filename='js/itemDetailOverlay.js') }}"
+    ></script>
+
+    <!-- SALES FLOW (SELL BUTTON) -->
+    <script type="module" src="{{ url_for('static', filename='js/sales.js') }}"></script>
+
+<script type="module" src="{{ url_for('static', filename='js/businessIntelligence.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/staffManager.js') }}"></script><!-- Add this at the END of dashboard.html -->
+<script type="module" src="{{ url_for('static', filename='js/access-controls.js') }}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("Dashboard loaded");
+
+    // NEW auth/session check
+    const sessionType = localStorage.getItem("sessionType"); // "owner" | "staff"
+    const activeShopId = localStorage.getItem("activeShopId");
+
+    if (!sessionType || !activeShopId) {
+      window.location.href = "/";
+      return;
+    }
+
+    // Apply access controls
+    if (window.applyAccessControls) {
+      if (sessionType === "staff") {
+        let level = 1;
+        try {
+          const ctx = JSON.parse(localStorage.getItem("staffContext") || "null");
+          level = Number(ctx?.accessLevel ?? 1);
+        } catch (e) {
+          level = 1;
+        }
+        window.applyAccessControls(level);
+      } else {
+        // owner = full access
+        window.applyAccessControls(4);
+      }
+    }
+
+    // IMPORTANT:
+    // Do NOT override the welcome message here.
+    // homePageNavigationBar.js already sets: Welcome, {Google displayName}
+    // (and for staff it can fallback to staffContext if needed)
+  });
+</script>
+<script type="module" src="{{ url_for('static', filename='js/smallSellAbleUnits.js') }}"></script>
+
+<script type="module" src="{{ url_for('static', filename='js/cart-icon.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/initiatePlan.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/planManager.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/upgrade.js') }}"></script>
+
+</body>
+</html>

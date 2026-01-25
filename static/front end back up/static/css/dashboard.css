@@ -1,0 +1,167 @@
+/* ------------------------------
+   General Dashboard Styles
+-------------------------------*/
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f6fa;
+    color: #333;
+}
+
+/* ------------------------------
+   Navbar
+-------------------------------*/
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #4285F4; /* Google Blue */
+    color: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.nav-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.nav-left #user-name {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.nav-left #shop-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.nav-right button {
+    background-color: white;
+    color: #4285F4;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.nav-right button:hover {
+    background-color: #f1f1f1;
+}
+
+/* ------------------------------
+   Header
+-------------------------------*/
+header {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+header p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ------------------------------
+   Action Buttons (Vertical)
+-------------------------------*/
+.action-buttons {
+    display: flex;
+    flex-direction: column; /* Vertical stack */
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.red-btn {
+    background-color: #e53935; /* Red */
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    width: 140px;
+    height: 140px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.red-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+.blue-btn {
+    background-color: #1e88e5; /* Blue */
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    padding: 25px 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.blue-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+/* ------------------------------
+   Dashboard Content
+-------------------------------*/
+.dashboard-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.dashboard-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.dashboard-content p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ------------------------------
+   Responsive Design
+-------------------------------*/
+@media (max-width: 480px) {
+    .action-buttons {
+        gap: 20px;
+    }
+
+    .red-btn {
+        width: 120px;
+        height: 120px;
+        font-size: 1.3rem;
+    }
+
+    .blue-btn {
+        padding: 20px 35px;
+        font-size: 1rem;
+    }
+
+    .dashboard-content h2 {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,81 @@
+/* ------------------------------
+   Manage Stock Overlay Styles
+-------------------------------*/
+
+/* Overlay background covering the page except navbar */
+#manage-stock-overlay {
+    display: none; /* hidden by default */
+    position: fixed;
+    top: 60px; /* leave space for navbar */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px); /* full height minus navbar */
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+    z-index: 1000;
+    justify-content: center; /* center content horizontally */
+    align-items: center;     /* center content vertically */
+}
+
+/* Overlay content box */
+#manage-stock-overlay .overlay-content {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-align: center;
+}
+
+/* Close button "×" */
+#manage-stock-overlay .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.2s;
+}
+
+#manage-stock-overlay .close-btn:hover {
+    color: #e53935;
+}
+
+/* Heading inside overlay */
+#manage-stock-overlay h2 {
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    color: #222;
+}
+
+/* Paragraph inside overlay */
+#manage-stock-overlay p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    #manage-stock-overlay .overlay-content {
+        padding: 20px;
+        width: 95%;
+    }
+
+    #manage-stock-overlay h2 {
+        font-size: 1.5rem;
+    }
+
+    #manage-stock-overlay p {
+        font-size: 0.9rem;
+    }
+
+    #manage-stock-overlay .close-btn {
+        font-size: 1.2rem;
+        top: 10px;
+        right: 15px;
+    }
+}

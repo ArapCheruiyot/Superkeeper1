@@ -1,0 +1,193 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+/* Page layout */
+body {
+    background: #f9fafb;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Header container */
+header div {
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+/* Logo */
+header img {
+    width: 200px; /* bigger logo */
+    height: auto;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Title */
+header h1 {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #222;
+}
+
+/* Subtitle */
+header p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+/* Google Sign-in Button */
+#google-signin-btn {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 14px 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 90%;
+    max-width: 300px;
+    display: inline-flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 35px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+/* Google colors text */
+#google-signin-btn span {
+    color: #4285F4; /* blue */
+    font-weight: bold;
+}
+
+/* Button hover effect */
+#google-signin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Section below */
+main div {
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 15px;
+}
+
+/* Sub heading */
+main h2 {
+    font-size: 1.7rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+/* Description text */
+main p {
+    font-size: 1.05rem;
+    color: #555;
+    margin-top: 6px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    header img {
+        width: 160px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    main h2 {
+        font-size: 1.4rem;
+    }
+
+    #google-signin-btn {
+        font-size: 0.95rem;
+        padding: 12px 18px;
+    }
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #4285F4;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.nav-left span {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.nav-right button {
+    background-color: white;
+    color: #4285F4;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.nav-right button:hover {
+    background-color: #f1f1f1;
+}
+
+/* ====================== */
+/*   FULL SCREEN OVERLAY  */
+/* ====================== */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;      /* FULL WIDTH */
+    height: 100vh;     /* FULL HEIGHT */
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: none;     /* hidden initially */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Inner content box */
+.overlay-content {
+    background: white;
+    width: 90%;
+    max-width: 600px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-align: left;
+}
+
+/* Close button */
+.close-btn {
+    float: right;
+    font-size: 26px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #444;
+}
+
+.close-btn:hover {
+    color: red;
+}
