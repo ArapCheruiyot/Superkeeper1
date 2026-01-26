@@ -4,10 +4,10 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 import numpy as np
-from PIL import Image
+
 from io import BytesIO
 
-# TODO: Re-enable TensorFlow imports when needed
+# TODO: Re-enable TensorFlow imports when needed aslo this one from PIL import Image
 # import tensorflow_hub as hub
 # from embeddings import generate_embedding
 # from sklearn.metrics.pairwise import cosine_similarity
@@ -995,4 +995,5 @@ if __name__ == "__main__":
     print("[READY] Listeners active for items and selling units")
     print("[READY] App running without embedding/ML dependencies")
     
+
     app.run(debug=True)
