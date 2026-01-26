@@ -29,7 +29,7 @@ app = Flask(__name__)
 # ======================================================
 # FIREBASE CONFIG
 # ======================================================
-cred = credentials.Certificate("serviceAccountKey.json")
+cred = credentials.Certificate("FIREBASE_KEY")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -997,3 +997,4 @@ if __name__ == "__main__":
     
 
     app.run(debug=True)
+
