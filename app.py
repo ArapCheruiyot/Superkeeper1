@@ -20,6 +20,22 @@ import uuid
 import json
 from datetime import datetime, timedelta
 
+
+# ======================================================
+# APP STARTUP INITIALIZATION (PRODUCTION SAFE)
+# ======================================================
+ print("[INIT] Preloading FULL cache (with batch tracking)...")
+    print("[NOTE] Embedding/vectorization features are disabled")
+    refresh_full_item_cache()
+    
+    # Set up listeners for both main items AND selling units
+    print("[INIT] Setting up Firestore listeners...")
+    db.collection_group("items").on_snapshot(on_full_item_snapshot)
+    db.collection_group("sellUnits").on_snapshot(on_selling_units_snapshot)
+    print("[READY] Listeners active for items and selling units")
+    print("[READY] App running without embedding/ML dependencies")
+
+
 # ======================================================
 # APP INIT
 # ======================================================
@@ -998,18 +1014,10 @@ def test_selling_units():
 # RUN SERVER
 # ======================================================
 if __name__ == "__main__":
-    print("[INIT] Preloading FULL cache (with batch tracking)...")
-    print("[NOTE] Embedding/vectorization features are disabled")
-    refresh_full_item_cache()
-    
-    # Set up listeners for both main items AND selling units
-    print("[INIT] Setting up Firestore listeners...")
-    db.collection_group("items").on_snapshot(on_full_item_snapshot)
-    db.collection_group("sellUnits").on_snapshot(on_selling_units_snapshot)
-    print("[READY] Listeners active for items and selling units")
-    print("[READY] App running without embedding/ML dependencies")
+   
     
 
     app.run(debug=True)
+
 
 
