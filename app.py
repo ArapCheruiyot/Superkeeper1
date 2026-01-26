@@ -29,9 +29,23 @@ app = Flask(__name__)
 # ======================================================
 # FIREBASE CONFIG
 # ======================================================
-cred = credentials.Certificate("FIREBASE_KEY")
+# ======================================================
+# FIREBASE CONFIG
+# ======================================================
+import os
+
+firebase_key = os.environ.get("FIREBASE_KEY")
+
+if not firebase_key:
+    raise ValueError("FIREBASE_KEY environment variable not set")
+
+cred_dict = json.loads(firebase_key)
+cred = credentials.Certificate(cred_dict)
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+
 
 
 # ======================================================
@@ -997,4 +1011,5 @@ if __name__ == "__main__":
     
 
     app.run(debug=True)
+
 
