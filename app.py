@@ -1,27 +1,36 @@
 from flask import Flask, render_template, request, jsonify
+
 import requests
 import firebase_admin
 from firebase_admin import credentials, firestore
 
 import numpy as np
-
+from PIL import Image
 from io import BytesIO
 
-# TODO: Re-enable TensorFlow imports when needed aslo this one from PIL import Image
-# import tensorflow_hub as hub
-# from embeddings import generate_embedding
-# from sklearn.metrics.pairwise import cosine_similarity
-
+import tensorflow_hub as hub
 import time
 import base64
 import math
+
+from embeddings import generate_embedding
+from sklearn.metrics.pairwise import cosine_similarity
 import random 
-import uuid
-import json
+
+
 from datetime import datetime, timedelta
 
 
 
+import uuid
+
+# At the top of your app.py, add:
+import json
+
+# Or if you already have Flask, it might be:
+from flask import Flask, render_template, request, jsonify
+# Make sure json is available
+ 
 
 # ======================================================
 # APP INIT
@@ -32,34 +41,19 @@ app = Flask(__name__)
 # ======================================================
 # FIREBASE CONFIG
 # ======================================================
-# ======================================================
-# FIREBASE CONFIG
-# ======================================================
-import os
-
-firebase_key = os.environ.get("FIREBASE_KEY")
-
-if not firebase_key:
-    raise ValueError("FIREBASE_KEY environment variable not set")
-
-cred_dict = json.loads(firebase_key)
-cred = credentials.Certificate(cred_dict)
-
+cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-
-
 # ======================================================
-# TODO: LOAD MODEL - Currently disabled for safe deployment
+# LOAD MODEL
 # ======================================================
-# print("[INIT] Loading TensorFlow Hub model...")
-# model = hub.load(
-#     "https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/feature_vector/5"
-# )
-# print("[READY] Model loaded successfully.")
-model = None  # Placeholder
+print("[INIT] Loading TensorFlow Hub model...")
+model = hub.load(
+    "https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/feature_vector/5"
+)
+print("[READY] Model loaded successfully.")
 
 
 # ======================================================
@@ -103,14 +97,12 @@ def refresh_full_item_cache():
                 item_id = item_doc.id
                 item_name = item_data.get("name", "Unnamed")
 
-                # TODO: Re-enable embeddings when needed
                 # Get embeddings (if any)
-                # embeddings = []
-                # for emb_doc in item_doc.reference.collection("embeddings").stream():
-                #     vector = emb_doc.to_dict().get("vector")
-                #     if vector:
-                #         embeddings.append(np.array(vector))
-                embeddings = []  # Placeholder - no embeddings for now
+                embeddings = []
+                for emb_doc in item_doc.reference.collection("embeddings").stream():
+                    vector = emb_doc.to_dict().get("vector")
+                    if vector:
+                        embeddings.append(np.array(vector))
 
                 # Get batches for this item (NEW: batch breakdown)
                 batches = item_data.get("batches", [])
@@ -201,7 +193,7 @@ def refresh_full_item_cache():
                     "stock": effective_stock,
                     "base_unit": item_data.get("baseUnit", "unit"),
                     "embeddings": embeddings,
-                    "has_embeddings": False,  # TODO: Set to len(embeddings) > 0 when re-enabling embeddings
+                    "has_embeddings": len(embeddings) > 0,
                     "selling_units": selling_units,
                     "category_id": category_entry["category_id"],
                     "category_name": category_entry["category_name"],
@@ -378,14 +370,10 @@ def dashboard():
 
 
 # ======================================================
-# TODO: VECTORIZE ITEM (STOCK IMAGE → EMBEDDING) - Currently disabled
+# VECTORIZE ITEM (STOCK IMAGE → EMBEDDING)
 # ======================================================
 @app.route("/vectorize-item", methods=["POST"])
 def vectorize_item():
-    """
-    TODO: Re-enable image vectorization when needed
-    Currently returns placeholder response
-    """
     try:
         data = request.get_json(force=True)
 
@@ -403,19 +391,31 @@ def vectorize_item():
         if missing:
             return jsonify({"status": "error", "missing_fields": missing}), 400
 
-        print(f"📥 /vectorize-item → {data['item_id']} image {data['image_index']} (DISABLED)")
-        
-        # TODO: Re-enable image processing and embedding generation
-        # response = requests.get(data["image_url"], timeout=10)
-        # img = Image.open(BytesIO(response.content)).convert("RGB")
-        # img = img.resize((224, 224))
-        # vector = generate_embedding(np.array(img))
-        
-        # Placeholder: Return success without actual processing
+        print(f"📥 /vectorize-item → {data['item_id']} image {data['image_index']}")
+
+        response = requests.get(data["image_url"], timeout=10)
+        img = Image.open(BytesIO(response.content)).convert("RGB")
+        img = img.resize((224, 224))
+
+        vector = generate_embedding(np.array(img))
+
+        db.collection("Shops") \
+            .document(data["shop_id"]) \
+            .collection("categories") \
+            .document(data["category_id"]) \
+            .collection("items") \
+            .document(data["item_id"]) \
+            .collection("embeddings") \
+            .document(str(data["image_index"])) \
+            .set({
+                "vector": vector.tolist(),
+                "model": "mobilenet_v2_100_224",
+                "updatedAt": firestore.SERVER_TIMESTAMP,
+            })
+
         return jsonify({
             "status": "success",
-            "embedding_length": 0,
-            "note": "Vectorization disabled - placeholder response"
+            "embedding_length": len(vector),
         })
 
     except Exception as e:
@@ -424,19 +424,35 @@ def vectorize_item():
 
 
 # ======================================================
+# ======================================================
 # BATCH-AWARE SALES SEARCH ROUTE (READ-ONLY)
+# ======================================================
 @app.route("/sales", methods=["POST"])
 def sales():
     """
-    ENHANCED BATCH-AWARE SALES SEARCH - FIXED FOR SELLING UNITS
+    ENHANCED BATCH-AWARE SALES SEARCH WITH COMPLETE LOGGING
+    (FIXED: Guaranteed category propagation)
     """
+
     try:
         start_time = time.time()
         data = request.get_json() or {}
 
-        # Simplified logging for speed
+        # --------------------------------------------------
+        # LOG REQUEST
+        # --------------------------------------------------
+        print("\n" + "=" * 80)
+        print("🔍 /sales REQUEST RECEIVED")
+        print("=" * 80)
+        print(f"📤 Received data: {json.dumps(data, indent=2)}")
+
         query = (data.get("query") or "").lower().strip()
         shop_id = data.get("shop_id")
+        user_id = data.get("user_id", "unknown")
+
+        print(f"🔎 Search Query: '{query}'")
+        print(f"🏪 Shop ID: {shop_id}")
+        print(f"👤 User ID: {user_id}")
 
         if not query or not shop_id:
             return jsonify({
@@ -447,8 +463,11 @@ def sales():
                 }
             }), 400
 
-        # Find shop in cache
+        # --------------------------------------------------
+        # FIND SHOP IN CACHE
+        # --------------------------------------------------
         shop = next((s for s in embedding_cache_full["shops"] if s["shop_id"] == shop_id), None)
+
         if not shop:
             return jsonify({
                 "items": [],
@@ -461,27 +480,48 @@ def sales():
         shop_name = shop.get("shop_name", "Unnamed")
         results = []
 
+        search_stats = {
+            "categories_searched": 0,
+            "items_checked": 0,
+            "matches_found": 0,
+            "main_items_found": 0,
+            "selling_units_found": 0
+        }
+
         # --------------------------------------------------
-        # IMPROVED SEARCH LOGIC
+        # MAIN SEARCH LOOP
         # --------------------------------------------------
         for category in shop.get("categories", []):
+            search_stats["categories_searched"] += 1
+
             category_id = category.get("category_id")
             category_name = category.get("category_name")
 
             for item in category.get("items", []):
+                search_stats["items_checked"] += 1
+
                 item_name = item.get("name", "")
                 item_name_lower = item_name.lower()
                 item_id = item.get("item_id")
-                
-                # Check if main item matches query
-                main_item_matches = query in item_name_lower
-                
-                # Process batches for this item
+
+                if query not in item_name_lower:
+                    continue
+
+                search_stats["matches_found"] += 1
+
+                # ✅ GUARANTEED CATEGORY (CRITICAL FIX)
+                safe_category_id = item.get("category_id") or category_id
+                safe_category_name = item.get("category_name") or category_name
+
+                if not safe_category_id:
+                    print(f"⚠️ WARNING: Item {item_id} missing category_id even after fallback")
+
                 batches = item.get("batches", [])
                 sorted_batches = sorted(batches, key=lambda b: b.get("timestamp", 0))
 
                 active_batch = None
                 next_batch = None
+
                 for i, batch in enumerate(sorted_batches):
                     if float(batch.get("quantity", 0)) > 0.001:
                         active_batch = batch
@@ -502,92 +542,111 @@ def sales():
                     batch_status = "no_stock"
 
                 # --------------------------------------------------
-                # ADD MAIN ITEM IF IT MATCHES
+                # MAIN ITEM RESPONSE
                 # --------------------------------------------------
-                if main_item_matches:
-                    main_item_response = {
-                        "type": "main_item",
-                        "item_id": item_id,
-                        "main_item_id": item_id,
-                        "category_id": item.get("category_id") or category_id,
-                        "category_name": item.get("category_name") or category_name,
-                        "name": item_name,
-                        "display_name": item_name,
-                        "thumbnail": item.get("thumbnail"),
-                        "batch_status": batch_status,
-                        "batch_id": active_batch.get("batch_id") if active_batch else None,
-                        "batch_name": active_batch.get("batch_name") if active_batch else None,
-                        "batch_remaining": float(active_batch.get("quantity", 0)) if active_batch else 0,
-                        "price": round(float(active_batch.get("sell_price", 0)), 2) if active_batch else 0,
-                        "base_unit": active_batch.get("unit", item.get("base_unit", "unit")) if active_batch else item.get("base_unit", "unit"),
-                        "batch_switch_required": batch_status in ["exhausted", "all_exhausted"],
-                        "next_batch_available": next_batch is not None,
-                        "next_batch_id": next_batch.get("batch_id") if next_batch else None,
-                        "next_batch_name": next_batch.get("batch_name") if next_batch else None,
-                        "next_batch_price": round(float(next_batch.get("sell_price", 0)), 2) if next_batch else None,
-                        "next_batch_remaining": float(next_batch.get("quantity", 0)) if next_batch else 0,
-                        "unit_type": "base"
+                main_item_response = {
+                    "type": "main_item",
+                    "item_id": item_id,
+                    "main_item_id": item_id,
+
+                    "category_id": safe_category_id,
+                    "category_name": safe_category_name,
+
+                    "name": item_name,
+                    "display_name": item_name,
+                    "thumbnail": item.get("thumbnail"),
+
+                    "batch_status": batch_status,
+                    "batch_id": active_batch.get("batch_id") if active_batch else None,
+                    "batch_name": active_batch.get("batch_name") if active_batch else None,
+                    "batch_remaining": float(active_batch.get("quantity", 0)) if active_batch else 0,
+                    "price": round(float(active_batch.get("sell_price", 0)), 2) if active_batch else 0,
+                    "base_unit": active_batch.get("unit", item.get("base_unit", "unit")) if active_batch else item.get("base_unit", "unit"),
+
+                    "batch_switch_required": batch_status in ["exhausted", "all_exhausted"],
+                    "next_batch_available": next_batch is not None,
+                    "next_batch_id": next_batch.get("batch_id") if next_batch else None,
+                    "next_batch_name": next_batch.get("batch_name") if next_batch else None,
+                    "next_batch_price": round(float(next_batch.get("sell_price", 0)), 2) if next_batch else None,
+                    "next_batch_remaining": float(next_batch.get("quantity", 0)) if next_batch else 0,
+
+                    "total_batches_available": len(batches),
+                    "available_batches": batches,
+                    "unit_type": "base",
+
+                    "complete_item_data": {
+                        "stock": float(item.get("stock", 0)),
+                        "base_unit": item.get("base_unit", "unit"),
+                        "buy_price": float(item.get("buy_price", 0)),
+                        "has_embeddings": item.get("has_embeddings", False),
+                        "total_stock_from_batches": float(item.get("total_stock_from_batches", 0)),
+                        "has_batches": item.get("has_batches", False),
+                        "selling_units_count": len(item.get("selling_units", [])),
+                        "batches_count": len(batches)
                     }
-                    results.append(main_item_response)
+                }
+
+                results.append(main_item_response)
+                search_stats["main_items_found"] += 1
 
                 # --------------------------------------------------
-                # SELLING UNITS - FIXED LOGIC
+                # SELLING UNITS
                 # --------------------------------------------------
                 for su in item.get("selling_units", []):
                     su_name = su.get("name", "").lower()
-                    
-                    # FIX: Check if selling unit name matches query, REGARDLESS of main item name
-                    if query in su_name:
-                        # This selling unit matches the query!
-                        conversion = float(su.get("conversion_factor", 1))
-                        unit_price = 0
-                        available_units = 0
 
-                        if active_batch and conversion > 0:
-                            available_units = float(active_batch.get("quantity", 0)) * conversion
-                            unit_price = float(active_batch.get("sell_price", 0)) / conversion
+                    if query not in su_name and query not in item_name_lower:
+                        continue
 
-                        next_unit_price = None
-                        if next_batch and conversion > 0:
-                            next_unit_price = float(next_batch.get("sell_price", 0)) / conversion
+                    search_stats["selling_units_found"] += 1
 
-                        selling_unit_response = {
-                            "type": "selling_unit",
-                            "item_id": item_id,
-                            "main_item_id": item_id,
-                            "sell_unit_id": su.get("sell_unit_id"),
-                            "category_id": item.get("category_id") or category_id,
-                            "category_name": item.get("category_name") or category_name,
-                            # Display selling unit prominently
-                            "name": f"{su.get('name')}",
-                            "display_name": su.get("name"),
-                            # Include parent item name in a separate field if needed
-                            "parent_item_name": item_name,
-                            "thumbnail": su.get("thumbnail") or item.get("thumbnail"),
-                            "batch_status": batch_status,
-                            "batch_id": active_batch.get("batch_id") if active_batch else None,
-                            "batch_remaining": float(active_batch.get("quantity", 0)) if active_batch else 0,
-                            "price": round(unit_price, 4),
-                            "available_stock": round(available_units, 2),
-                            "conversion_factor": conversion,
-                            "base_unit": active_batch.get("unit", item.get("base_unit", "unit")) if active_batch else item.get("base_unit", "unit"),
-                            "batch_switch_required": batch_status in ["exhausted", "all_exhausted"],
-                            "next_batch_available": next_batch is not None,
-                            "next_batch_id": next_batch.get("batch_id") if next_batch else None,
-                            "next_batch_price": round(next_unit_price, 4) if next_unit_price else None,
-                            "next_batch_remaining": float(next_batch.get("quantity", 0)) if next_batch else 0,
-                            "has_batch_links": len(su.get("batch_links", [])) > 0,
-                            "batch_links": su.get("batch_links", []),
-                            "total_units_available": su.get("total_units_available", 0),
-                            "unit_type": "selling_unit"
-                        }
-                        results.append(selling_unit_response)
+                    conversion = float(su.get("conversion_factor", 1))
+                    unit_price = 0
+                    available_units = 0
 
-        # Sort results: selling units that match query exactly first, then main items
-        results.sort(key=lambda x: (
-            x.get("type") == "selling_unit" and query in x.get("display_name", "").lower(),
-            x.get("type") == "selling_unit"
-        ), reverse=True)
+                    if active_batch and conversion > 0:
+                        available_units = float(active_batch.get("quantity", 0)) * conversion
+                        unit_price = float(active_batch.get("sell_price", 0)) / conversion
+
+                    next_unit_price = None
+                    if next_batch and conversion > 0:
+                        next_unit_price = float(next_batch.get("sell_price", 0)) / conversion
+
+                    selling_unit_response = {
+                        "type": "selling_unit",
+                        "item_id": item_id,
+                        "main_item_id": item_id,
+                        "sell_unit_id": su.get("sell_unit_id"),
+
+                        "category_id": safe_category_id,
+                        "category_name": safe_category_name,
+
+                        "name": f"{item_name} ({su.get('name')})",
+                        "display_name": su.get("name"),
+                        "thumbnail": su.get("thumbnail") or item.get("thumbnail"),
+
+                        "batch_status": batch_status,
+                        "batch_id": active_batch.get("batch_id") if active_batch else None,
+                        "batch_remaining": float(active_batch.get("quantity", 0)) if active_batch else 0,
+                        "price": round(unit_price, 4),
+                        "available_stock": round(available_units, 2),
+                        "conversion_factor": conversion,
+                        "base_unit": active_batch.get("unit", item.get("base_unit", "unit")) if active_batch else item.get("base_unit", "unit"),
+
+                        "batch_switch_required": batch_status in ["exhausted", "all_exhausted"],
+                        "next_batch_available": next_batch is not None,
+                        "next_batch_id": next_batch.get("batch_id") if next_batch else None,
+                        "next_batch_price": round(next_unit_price, 4) if next_unit_price else None,
+                        "next_batch_remaining": float(next_batch.get("quantity", 0)) if next_batch else 0,
+
+                        "has_batch_links": len(su.get("batch_links", [])) > 0,
+                        "batch_links": su.get("batch_links", []),
+                        "total_units_available": su.get("total_units_available", 0),
+
+                        "unit_type": "selling_unit"
+                    }
+
+                    results.append(selling_unit_response)
 
         processing_time = round((time.time() - start_time) * 1000, 2)
 
@@ -598,9 +657,9 @@ def sales():
                 "shop_name": shop_name,
                 "query": query,
                 "results": len(results),
+                "search_stats": search_stats,
                 "processing_time_ms": processing_time,
-                "cache_last_updated": embedding_cache_full.get("last_updated"),
-                "note": "Embedding-based search disabled - using text search only"
+                "cache_last_updated": embedding_cache_full.get("last_updated")
             }
         }), 200
 
@@ -614,6 +673,7 @@ def sales():
                 "processing_time_ms": round((time.time() - start_time) * 1000, 2)
             }
         }), 500
+
 
 # ======================================================
 @app.route("/complete-sale", methods=["POST"])
@@ -817,8 +877,7 @@ def item_optimization():
             "items_with_batches": items_with_batches,
             "items_without_batches": items_without_batches,
             "percentage_with_batches": round(items_with_batches / (items_with_batches + items_without_batches) * 100, 1) if (items_with_batches + items_without_batches) > 0 else 0
-        },
-        "note": "Embedding-based optimization disabled"
+        }
     })
 
 
@@ -857,9 +916,7 @@ def debug_cache():
                 "has_batches": first_item.get("has_batches", False),
                 "batch_count": len(first_item.get("batches", [])),
                 "has_selling_units": len(first_item.get("selling_units", [])) > 0,
-                "selling_units_count": len(first_item.get("selling_units", [])),
-                "has_embeddings": first_item.get("has_embeddings", False),  # Will be False since disabled
-                "embeddings_count": len(first_item.get("embeddings", []))
+                "selling_units_count": len(first_item.get("selling_units", []))
             },
             "cache_details": {
                 "total_shops": len(embedding_cache_full["shops"]),
@@ -868,12 +925,14 @@ def debug_cache():
                 "total_selling_units": total_selling_units,
                 "total_batches": total_batches,
                 "items_with_batches": items_with_batches,
-                "last_updated": embedding_cache_full["last_updated"],
-                "note": "Embedding cache disabled - storing only metadata"
+                "last_updated": embedding_cache_full["last_updated"]
             }
         })
     except (IndexError, KeyError) as e:
         return jsonify({"error": f"Cache structure issue: {str(e)}"}), 500
+
+
+
 
 
 # ======================================================
@@ -998,37 +1057,16 @@ def test_selling_units():
 
 
 # ======================================================
-# STARTUP INITIALIZATION (SAFE) AND RUNNING THE SERVER
+# RUN SERVER
 # ======================================================
-has_initialized = False
-
-def startup_init():
-    global has_initialized
-    if has_initialized:
-        return
-
+if __name__ == "__main__":
     print("[INIT] Preloading FULL cache (with batch tracking)...")
-    print("[NOTE] Embedding/vectorization features are disabled")
     refresh_full_item_cache()
-
+    
+    # Set up listeners for both main items AND selling units
     print("[INIT] Setting up Firestore listeners...")
     db.collection_group("items").on_snapshot(on_full_item_snapshot)
     db.collection_group("sellUnits").on_snapshot(on_selling_units_snapshot)
-
     print("[READY] Listeners active for items and selling units")
-    print("[READY] App running without embedding/ML dependencies")
-
-    has_initialized = True
-# Render / Gunicorn
-if os.environ.get("RENDER") == "true":
-    startup_init()
-
-# Local development
-if __name__ == "__main__":
-    startup_init()
+    
     app.run(debug=True)
-
-
-
-
-
