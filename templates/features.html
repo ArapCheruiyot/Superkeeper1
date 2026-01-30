@@ -1,0 +1,846 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- FEATURES PAGE - IMPROVED VERSION -->
+<div class="features-page">
+    
+    <!-- Fixed Navigation Bar -->
+    <nav class="features-nav-bar">
+        <a href="{{ url_for('home') }}" class="nav-home">
+            ← Back to Home
+        </a>
+        
+        <div class="nav-sections">
+            <a href="#inventory">Inventory</a>
+            <a href="#sales">Sales</a>
+            <a href="#team">Team</a>
+            <a href="#compare">Compare</a>
+        </div>
+        
+        <button class="nav-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            ↑ Top
+        </button>
+    </nav>
+    
+    <!-- Page Header -->
+    <header class="features-header">
+        <h1>Powerful Features, Simple Design</h1>
+        <p>Built specifically for small businesses. Everything you need, nothing you don't.</p>
+    </header>
+    
+    <!-- Feature Categories -->
+    <div class="feature-categories">
+        
+        <!-- INVENTORY MANAGEMENT -->
+        <section id="inventory" class="category-section">
+            <div class="category-title">
+                <span class="category-icon">📦</span>
+                <h2>Inventory Management</h2>
+                <p>Track stock the easy way</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">📸</span>
+                        <h3>Snap & Track</h3>
+                    </div>
+                    <p>Take photos of items. We track them automatically with AI-powered recognition.</p>
+                    <ul class="feature-points">
+                        <li>No manual data entry</li>
+                        <li>Automatic category detection</li>
+                        <li>Visual inventory management</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">📊</span>
+                        <h3>Smart Alerts</h3>
+                    </div>
+                    <p>Get notified before you run out of stock. Prevent lost sales with intelligent alerts.</p>
+                    <ul class="feature-points">
+                        <li>Low stock notifications</li>
+                        <li>Expiry date reminders</li>
+                        <li>Best-seller alerts</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">🔄</span>
+                        <h3>Real-Time Sync</h3>
+                    </div>
+                    <p>Multiple staff members? See updates instantly across all devices.</p>
+                    <ul class="feature-points">
+                        <li>Live inventory updates</li>
+                        <li>Multi-user collaboration</li>
+                        <li>Instant sales tracking</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SALES & PAYMENTS -->
+        <section id="sales" class="category-section">
+            <div class="category-title">
+                <span class="category-icon">💰</span>
+                <h2>Sales & Payments</h2>
+                <p>Track every shilling</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">💳</span>
+                        <h3>All Payment Types</h3>
+                    </div>
+                    <p>Track all payments in one place - cash, M-Pesa, cards, and mobile money.</p>
+                    <ul class="feature-points">
+                        <li>Unified payment dashboard</li>
+                        <li>Daily sales reports</li>
+                        <li>Payment method analytics</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">📈</span>
+                        <h3>Business Insights</h3>
+                    </div>
+                    <p>Make data-driven decisions with easy-to-understand reports and analytics.</p>
+                    <ul class="feature-points">
+                        <li>Daily performance reports</li>
+                        <li>Sales trend analysis</li>
+                        <li>Profit margin tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">🚀</span>
+                        <h3>Grows With You</h3>
+                    </div>
+                    <p>From 10 items to 10,000 items - same simple system that scales with your business.</p>
+                    <ul class="feature-points">
+                        <li>No per-item limits</li>
+                        <li>Easy staff scaling</li>
+                        <li>Enterprise features on demand</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- TEAM MANAGEMENT -->
+        <section id="team" class="category-section">
+            <div class="category-title">
+                <span class="category-icon">👥</span>
+                <h2>Team Management</h2>
+                <p>Control who sees what</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">👮‍♂️</span>
+                        <h3>Staff Control</h3>
+                    </div>
+                    <p>Role-Based Access Control (RBAC) system - control what each employee can see and do.</p>
+                    <ul class="feature-points">
+                        <li>Create custom roles</li>
+                        <li>Limit access to sensitive data</li>
+                        <li>Track staff activity</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">📱</span>
+                        <h3>Mobile-First</h3>
+                    </div>
+                    <p>Designed for mobile from day one. Manage your business from anywhere.</p>
+                    <ul class="feature-points">
+                        <li>Native mobile experience</li>
+                        <li>Touch-optimized interface</li>
+                        <li>Works on any smartphone</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <span class="feature-emoji">🌐</span>
+                        <h3>Works Offline</h3>
+                    </div>
+                    <p>No internet? No problem. Continue working and sync when you're back online.</p>
+                    <ul class="feature-points">
+                        <li>Full offline functionality</li>
+                        <li>Automatic sync when online</li>
+                        <li>No data loss</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- COMPARISON SECTION -->
+        <section id="compare" class="comparison-section">
+            <h2 class="compare-title">Why Choose Superkeeper?</h2>
+            
+            <div class="comparison-table">
+                <div class="table-row header">
+                    <div class="table-cell">Task</div>
+                    <div class="table-cell old-method">Old Way</div>
+                    <div class="table-cell new-method">Superkeeper</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell">Track Stock</div>
+                    <div class="table-cell old-method">Manual counting, errors common</div>
+                    <div class="table-cell new-method">Automatic, accurate tracking</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell">See Daily Sales</div>
+                    <div class="table-cell old-method">End-of-day calculations</div>
+                    <div class="table-cell new-method">Real-time dashboard</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell">Manage Staff</div>
+                    <div class="table-cell old-method">Trust-based, no control</div>
+                    <div class="table-cell new-method">Role-based security</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell">Access Business Data</div>
+                    <div class="table-cell old-method">Only at the shop</div>
+                    <div class="table-cell new-method">Anywhere, anytime</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell">Work Without Internet</div>
+                    <div class="table-cell old-method">Impossible</div>
+                    <div class="table-cell new-method">Full functionality</div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Sticky Call to Action -->
+    <div class="sticky-cta" id="stickyCta">
+        <div class="cta-content">
+            <div class="cta-text">
+                <strong>Ready to try Superkeeper?</strong>
+                <span>Start free, no credit card needed</span>
+            </div>
+            <div class="cta-buttons">
+                <button class="cta-primary" onclick="handleGetStarted()">
+                    Start Free Today
+                </button>
+                <a href="{{ url_for('pricing') }}" class="cta-secondary">
+                    See Pricing
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Final Call to Action -->
+    <div class="final-cta">
+        <h2>Ready to Supercharge Your Business?</h2>
+        <p>Join thousands of small businesses already using Superkeeper</p>
+        <div class="action-buttons">
+            <button class="btn-primary" onclick="handleGetStarted()">
+                Start Free Today
+            </button>
+            <a href="{{ url_for('pricing') }}" class="btn-secondary">
+                See Pricing Plans
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for navigation links
+    document.querySelectorAll('.nav-sections a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Animation for feature cards
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    // Observe feature cards
+    document.querySelectorAll('.feature-card').forEach(card => {
+        observer.observe(card);
+    });
+    
+    // Handle sticky CTA visibility
+    const stickyCta = document.getElementById('stickyCta');
+    let lastScrollTop = 0;
+    
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Show sticky CTA when scrolling down, hide when scrolling up
+        if (scrollTop > 300 && scrollTop > lastScrollTop) {
+            stickyCta.classList.add('show');
+        } else {
+            stickyCta.classList.remove('show');
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+    
+    // Highlight active nav section
+    const sections = document.querySelectorAll('.category-section');
+    const navLinks = document.querySelectorAll('.nav-sections a');
+    
+    function highlightNav() {
+        let current = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= (sectionTop - 100)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', highlightNav);
+});
+</script>
+
+<style>
+/* FEATURES PAGE STYLES */
+.features-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    position: relative;
+}
+
+/* Fixed Navigation Bar */
+.features-nav-bar {
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav-home {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.nav-sections {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-sections a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.nav-sections a:hover,
+.nav-sections a.active {
+    color: #3b82f6;
+}
+
+.nav-sections a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #3b82f6;
+}
+
+.nav-top {
+    background: #f1f5f9;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #475569;
+    transition: all 0.2s;
+}
+
+.nav-top:hover {
+    background: #e2e8f0;
+}
+
+/* Page Header */
+.features-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 1rem;
+}
+
+.features-header h1 {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.features-header p {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Category Sections */
+.category-section {
+    margin-bottom: 4rem;
+}
+
+.category-title {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.category-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.category-title h2 {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.category-title p {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border-color: #3b82f6;
+}
+
+.feature-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.feature-emoji {
+    font-size: 2rem;
+}
+
+.feature-header h3 {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+.feature-card p {
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.feature-points {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-points li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.feature-points li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #10b981;
+    font-weight: bold;
+}
+
+/* Comparison Section */
+.comparison-section {
+    background: #f8fafc;
+    border-radius: 1rem;
+    padding: 3rem;
+    margin: 3rem 0;
+}
+
+.compare-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 2rem;
+}
+
+.comparison-table {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row.header {
+    background: #f1f5f9;
+    font-weight: 600;
+}
+
+.table-cell {
+    padding: 1rem;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+}
+
+.table-cell:last-child {
+    border-right: none;
+}
+
+.old-method {
+    color: #dc2626;
+    background: rgba(220, 38, 38, 0.05);
+}
+
+.new-method {
+    color: #059669;
+    background: rgba(5, 150, 105, 0.05);
+}
+
+/* Sticky CTA */
+.sticky-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 90;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sticky-cta.show {
+    transform: translateY(0);
+}
+
+.cta-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cta-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.cta-text strong {
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.cta-text span {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.cta-primary, .cta-secondary {
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.cta-primary {
+    background: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.cta-primary:hover {
+    background: #2563eb;
+}
+
+.cta-secondary {
+    background: white;
+    color: #3b82f6;
+    border: 1px solid #e2e8f0;
+}
+
+.cta-secondary:hover {
+    background: #f1f5f9;
+}
+
+/* Final CTA */
+.final-cta {
+    text-align: center;
+    padding: 3rem 1rem;
+    margin: 3rem 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 1rem;
+}
+
+.final-cta h2 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.final-cta p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: white;
+    color: #667eea;
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .features-nav-bar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 0.5rem;
+        text-align: center;
+    }
+    
+    .nav-sections {
+        order: 1;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .nav-home, .nav-top {
+        order: 2;
+    }
+    
+    .features-header h1 {
+        font-size: 2rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .category-section {
+        margin-bottom: 3rem;
+    }
+    
+    .comparison-section {
+        padding: 2rem 1rem;
+        margin: 2rem 0;
+    }
+    
+    .table-row {
+        grid-template-columns: 1fr;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .table-cell {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .table-cell:last-child {
+        border-bottom: none;
+    }
+    
+    .table-row.header {
+        display: none;
+    }
+    
+    .cta-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .cta-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .features-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .category-title h2 {
+        font-size: 1.5rem;
+    }
+    
+    .feature-card {
+        padding: 1.25rem;
+    }
+    
+    .final-cta {
+        padding: 2rem 1rem;
+    }
+    
+    .final-cta h2 {
+        font-size: 1.5rem;
+    }
+}
+</style>
+{% endblock %}

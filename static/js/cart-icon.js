@@ -1,4 +1,5 @@
-// cart-icon.js - FIXED WITH SEPARATE BASE/SELLING UNITS SUPPORT
+// cart-icon.js - SMART CART SYSTEM WITH BACKEND INTEGRATION (DRAGGABLE)
+
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 import { db } from "./firebase-config.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
@@ -10,6 +11,11 @@ const FLASK_BACKEND_URL = window.location.origin;
 // ====================================================
 let cart = [];
 let currentShopId = null;
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+let initialX = 0;
+let initialY = 0;
 
 // ====================================================
 // DEBUG UTILITIES
@@ -19,27 +25,23 @@ function debugLog(message, data = null) {
     console.log(`🛒 ${message}`, data || '');
 }
 
-function debugError(message, error = null) {
-    console.error(`🛒 ❌ ${message}`, error || '');
-}
-
 // ====================================================
 // CART MANAGEMENT FUNCTIONS
 // ====================================================
 
 function saveCartToStorage() {
-    localStorage.setItem('sales_cart', JSON.stringify(cart));
+    localStorage.setItem('smart_sales_cart', JSON.stringify(cart));
     debugLog('Cart saved to storage', cart.length);
 }
 
 function loadCartFromStorage() {
-    const saved = localStorage.getItem('sales_cart');
+    const saved = localStorage.getItem('smart_sales_cart');
     if (saved) {
         try {
             cart = JSON.parse(saved);
             debugLog('Cart loaded from storage', cart.length);
         } catch (error) {
-            debugError('Error loading cart', error);
+            console.error('Error loading cart', error);
             cart = [];
         }
     }
@@ -51,11 +53,11 @@ function getCartCount() {
 }
 
 function getCartTotal() {
-    return cart.reduce((sum, item) => sum + ((item.sellPrice || item.sell_price || item.price || 0) * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + ((item.price || item.sellPrice || item.sell_price || 0) * item.quantity), 0);
 }
 
 // ====================================================
-// CART ICON - FIXED VERSION
+// DRAGGABLE CART ICON
 // ====================================================
 
 function updateCartIcon() {
@@ -64,46 +66,76 @@ function updateCartIcon() {
     let cartIcon = document.getElementById('sales-cart-icon');
 
     if (!cartIcon) {
-        debugLog('Creating new cart icon');
         cartIcon = document.createElement('div');
         cartIcon.id = 'sales-cart-icon';
         document.body.appendChild(cartIcon);
-        
-        // Add CSS styles for cart icon
         addCartIconStyles();
+        
+        // Load saved position
+        const savedPos = localStorage.getItem('cart_icon_position');
+        if (savedPos) {
+            try {
+                const { x, y } = JSON.parse(savedPos);
+                cartIcon.style.left = `${x}px`;
+                cartIcon.style.top = `${y}px`;
+            } catch (e) {
+                console.warn('Failed to load cart icon position:', e);
+            }
+        }
     }
 
     const count = getCartCount();
     const total = getCartTotal();
 
-    debugLog(`Cart state - Count: ${count}, Total: $${total.toFixed(2)}`);
-
     cartIcon.innerHTML = `
         <div class="cart-icon-container" style="
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 20px;
+            padding: 8px 16px;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
             border: 2px solid white;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             user-select: none;
             transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
         ">
-            🛒 ${count} items | $${total.toFixed(2)}
+            <span style="font-size: 16px;">🛒</span>
+            <div>
+                <div style="font-size: 12px; line-height: 1.2;">${count} items</div>
+                <div style="font-size: 10px; opacity: 0.9;">$${total.toFixed(2)}</div>
+            </div>
+            <div class="drag-handle" style="
+                position: absolute;
+                top: 2px;
+                right: 2px;
+                width: 12px;
+                height: 12px;
+                background: rgba(255,255,255,0.3);
+                border-radius: 50%;
+                cursor: move;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 8px;
+            ">✥</div>
         </div>
     `;
 
     const container = cartIcon.querySelector('.cart-icon-container');
+    const dragHandle = cartIcon.querySelector('.drag-handle');
     
-    // Add click handler
-    container.onclick = () => {
-        debugLog('Cart icon clicked!');
+    // Click to open cart
+    container.onclick = (e) => {
+        if (isDragging) {
+            isDragging = false;
+            return;
+        }
         if (count > 0) {
             showCartReview();
         } else {
@@ -111,26 +143,163 @@ function updateCartIcon() {
         }
     };
     
-    // Add hover effects
+    // Drag functionality
+    dragHandle.onmousedown = startDrag;
+    dragHandle.ontouchstart = startDragTouch;
+    
     container.onmouseenter = () => {
-        container.style.transform = 'scale(1.05)';
-        container.style.boxShadow = '0 6px 25px rgba(102, 126, 234, 0.6)';
+        if (!isDragging) {
+            container.style.transform = 'scale(1.05)';
+            container.style.boxShadow = '0 6px 25px rgba(102, 126, 234, 0.6)';
+        }
     };
     
     container.onmouseleave = () => {
-        container.style.transform = 'scale(1)';
-        container.style.boxShadow = '0 4px 20px rgba(102, 126, 234, 0.4)';
+        if (!isDragging) {
+            container.style.transform = 'scale(1)';
+            container.style.boxShadow = '0 4px 20px rgba(102, 126, 234, 0.4)';
+        }
     };
     
-    // Add bounce animation when items added
     if (count > 0) {
         container.style.animation = 'cartBounce 0.4s ease';
-        setTimeout(() => {
-            container.style.animation = '';
-        }, 400);
+        setTimeout(() => container.style.animation = '', 400);
     }
     
-    debugLog('Cart icon updated successfully');
+    debugLog('Cart icon updated');
+}
+
+function startDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const cartIcon = document.getElementById('sales-cart-icon');
+    if (!cartIcon) return;
+    
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    initialX = cartIcon.offsetLeft;
+    initialY = cartIcon.offsetTop;
+    
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+    
+    cartIcon.querySelector('.cart-icon-container').style.cursor = 'grabbing';
+    cartIcon.querySelector('.cart-icon-container').style.boxShadow = '0 8px 30px rgba(102, 126, 234, 0.8)';
+}
+
+function startDragTouch(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const cartIcon = document.getElementById('sales-cart-icon');
+    if (!cartIcon) return;
+    
+    isDragging = true;
+    dragStartX = e.touches[0].clientX;
+    dragStartY = e.touches[0].clientY;
+    initialX = cartIcon.offsetLeft;
+    initialY = cartIcon.offsetTop;
+    
+    document.addEventListener('touchmove', dragTouch);
+    document.addEventListener('touchend', stopDragTouch);
+    
+    cartIcon.querySelector('.cart-icon-container').style.cursor = 'grabbing';
+    cartIcon.querySelector('.cart-icon-container').style.boxShadow = '0 8px 30px rgba(102, 126, 234, 0.8)';
+}
+
+function drag(e) {
+    if (!isDragging) return;
+    
+    e.preventDefault();
+    const cartIcon = document.getElementById('sales-cart-icon');
+    if (!cartIcon) return;
+    
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    
+    let newX = initialX + dx;
+    let newY = initialY + dy;
+    
+    // Keep within viewport bounds
+    const maxX = window.innerWidth - cartIcon.offsetWidth;
+    const maxY = window.innerHeight - cartIcon.offsetHeight;
+    
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+    
+    cartIcon.style.left = `${newX}px`;
+    cartIcon.style.top = `${newY}px`;
+}
+
+function dragTouch(e) {
+    if (!isDragging) return;
+    
+    e.preventDefault();
+    const cartIcon = document.getElementById('sales-cart-icon');
+    if (!cartIcon) return;
+    
+    const dx = e.touches[0].clientX - dragStartX;
+    const dy = e.touches[0].clientY - dragStartY;
+    
+    let newX = initialX + dx;
+    let newY = initialY + dy;
+    
+    // Keep within viewport bounds
+    const maxX = window.innerWidth - cartIcon.offsetWidth;
+    const maxY = window.innerHeight - cartIcon.offsetHeight;
+    
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+    
+    cartIcon.style.left = `${newX}px`;
+    cartIcon.style.top = `${newY}px`;
+}
+
+function stopDrag() {
+    if (!isDragging) return;
+    
+    isDragging = false;
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', stopDrag);
+    
+    const cartIcon = document.getElementById('sales-cart-icon');
+    if (cartIcon) {
+        cartIcon.querySelector('.cart-icon-container').style.cursor = 'pointer';
+        cartIcon.querySelector('.cart-icon-container').style.boxShadow = '0 4px 20px rgba(102, 126, 234, 0.4)';
+        
+        // Save position
+        saveCartPosition();
+    }
+}
+
+function stopDragTouch() {
+    if (!isDragging) return;
+    
+    isDragging = false;
+    document.removeEventListener('touchmove', dragTouch);
+    document.removeEventListener('touchend', stopDragTouch);
+    
+    const cartIcon = document.getElementById('sales-cart-icon');
+    if (cartIcon) {
+        cartIcon.querySelector('.cart-icon-container').style.cursor = 'pointer';
+        cartIcon.querySelector('.cart-icon-container').style.boxShadow = '0 4px 20px rgba(102, 126, 234, 0.4)';
+        
+        // Save position
+        saveCartPosition();
+    }
+}
+
+function saveCartPosition() {
+    const cartIcon = document.getElementById('sales-cart-icon');
+    if (cartIcon) {
+        const position = {
+            x: cartIcon.offsetLeft,
+            y: cartIcon.offsetTop
+        };
+        localStorage.setItem('cart_icon_position', JSON.stringify(position));
+    }
 }
 
 function addCartIconStyles() {
@@ -140,17 +309,34 @@ function addCartIconStyles() {
         style.textContent = `
             #sales-cart-icon {
                 position: fixed;
-                bottom: 30px;
-                right: 30px;
+                top: 40px;
+                right: 50px;
                 z-index: 9990;
-                max-width: calc(100vw - 40px);
+                max-width: 160px;
                 overflow: hidden;
+                cursor: move;
+                user-select: none;
             }
             
             .cart-icon-container {
                 position: relative;
-                min-width: 180px;
+                min-width: 140px;
                 text-align: center;
+                transition: all 0.3s ease;
+            }
+            
+            .cart-icon-container:hover .drag-handle {
+                opacity: 1;
+            }
+            
+            .drag-handle {
+                opacity: 0.5;
+                transition: opacity 0.2s;
+            }
+            
+            .drag-handle:hover {
+                opacity: 1;
+                background: rgba(255,255,255,0.5);
             }
             
             @keyframes cartBounce {
@@ -158,7 +344,6 @@ function addCartIconStyles() {
                 50% { transform: scale(1.1); }
             }
             
-            /* Cart Modal Styles */
             .cart-modal-backdrop {
                 position: fixed;
                 top: 0;
@@ -196,105 +381,120 @@ function addCartIconStyles() {
                 from { transform: translateY(20px); opacity: 0; }
                 to { transform: translateY(0); opacity: 1; }
             }
+            
+            @media (max-width: 480px) {
+                #sales-cart-icon {
+                    max-width: 140px;
+                    right: 10px;
+                }
+                
+                .cart-icon-container {
+                    min-width: 120px;
+                    font-size: 12px;
+                    padding: 6px 12px;
+                }
+            }
         `;
         document.head.appendChild(style);
-        debugLog('Cart icon styles added');
     }
 }
 
 // ====================================================
-// ADD ITEM TO CART (FIXED FOR SEPARATE BASE/SELLING UNITS)
+// ADD ITEM TO CART (UPDATED FOR SMART SYSTEM)
 // ====================================================
 
 function addItemToCart(item) {
-    console.log('🛒 Adding item to cart:', item);
+    console.log('🛒 Adding smart item to cart:', item);
     
     if (!item || !item.name) {
-        console.error('🛒 Invalid item:', item);
+        console.error('Invalid item:', item);
         return false;
     }
     
-    // Always add ONE item
-    const qty = 1;
-    const stock = item.stock || item.available_stock || item.batch_remaining || 0;
+    const qty = 1; // One-tap system
     
-    // Check stock
-    if (stock < qty) {
+    // ✅ Use smart fields from backend
+    const stock = item.real_available !== undefined ? item.real_available : item.batch_remaining;
+    
+    if (stock < qty && item.can_fulfill === false) {
         showNotification(`❌ "${item.name}" is out of stock!`, 'error', 3000);
         return false;
     }
     
-    // ✅ CRITICAL: Create UNIQUE cart ID
-    // Base item: item_id + batch_id
-    // Selling unit: item_id + sell_unit_id + batch_id
+    // Create unique cart ID
     const cartItemId = item.type === 'selling_unit' 
         ? `${item.item_id}_${item.sell_unit_id}_${item.batch_id}`
         : `${item.item_id}_main_${item.batch_id}`;
     
     const cartItem = {
-        // ✅ UNIQUE ID for cart
+        // Core identification
         id: cartItemId,
+        cart_item_id: cartItemId,
+        item_id: item.item_id,
+        main_item_id: item.main_item_id || item.item_id,
         
-        // Core IDs
-        item_id: item.item_id || item.id || Date.now(),
-        main_item_id: item.main_item_id || item.item_id || item.id || Date.now(),
-        
-        // Names
+        // Item info
         name: item.name,
         display_name: item.display_name || item.name,
         
-        // Quantity & Pricing
+        // Quantity & pricing
         quantity: qty,
-        sellPrice: item.sellPrice || item.sell_price || item.price || 0,
-        sell_price: item.sellPrice || item.sell_price || item.price || 0,
         price: item.price || item.sellPrice || item.sell_price || 0,
+        sellPrice: item.price || item.sellPrice || item.sell_price || 0,
+        sell_price: item.price || item.sellPrice || item.sell_price || 0,
         
-        // ✅ CRITICAL: CATEGORY ID FOR BACKEND
+        // Required for backend
         category_id: item.category_id || 'unknown',
         category_name: item.category_name || 'Uncategorized',
         
-        // Stock
+        // Stock info
         stock: stock,
         available_stock: stock,
         
-        // ✅ CRITICAL: TYPE MUST BE PRESERVED
+        // Smart fields
         type: item.type || 'main_item',
-        
-        // Batch Info
-        batch_id: item.batch_id || item.batchId || null,
-        batchId: item.batch_id || item.batchId || null,
-        batch_name: item.batch_name || null,
+        batch_id: item.batch_id,
+        batchId: item.batch_id,
+        batch_name: item.batch_name,
         batch_remaining: item.batch_remaining || stock,
         
-        // Selling Unit Info (only for selling units)
-        sell_unit_id: item.sell_unit_id || null,
+        // Selling unit info
+        sell_unit_id: item.sell_unit_id,
         conversion_factor: item.conversion_factor || 1,
         
-        // Optional
-        thumbnail: item.thumbnail || null,
-        added_at: new Date().toISOString()
+        // Smart system fields
+        can_fulfill: item.can_fulfill !== undefined ? item.can_fulfill : true,
+        batch_switch_required: item.batch_switch_required || false,
+        is_current_batch: item.is_current_batch || false,
+        real_available: item.real_available,
+        
+        // Metadata
+        thumbnail: item.thumbnail,
+        added_at: new Date().toISOString(),
+        _batch_switched: item._batch_switched || false
     };
     
-    console.log('🛒 Processed cart item:', cartItem);
-    console.log('🛒 Cart item ID:', cartItemId);
-    console.log('🛒 Item type:', cartItem.type);
+    console.log('🛒 Smart cart item:', {
+        id: cartItem.id,
+        type: cartItem.type,
+        batch_id: cartItem.batch_id,
+        can_fulfill: cartItem.can_fulfill
+    });
     
-    // ✅ CRITICAL: Find existing item using UNIQUE ID (not item_id alone!)
+    // Find existing item by unique ID
     const existingIndex = cart.findIndex(i => i.id === cartItemId);
     
     if (existingIndex !== -1) {
-        // Update existing item
         const newQuantity = cart[existingIndex].quantity + qty;
         if (stock < newQuantity) {
-            showNotification(`❌ Cannot add more. Only ${stock - cart[existingIndex].quantity} available`, 'error', 3000);
+            showNotification(`❌ Only ${stock - cart[existingIndex].quantity} available`, 'error', 3000);
             return false;
         }
         cart[existingIndex].quantity = newQuantity;
-        console.log('🛒 Updated existing item:', cart[existingIndex].name, 'x', cart[existingIndex].quantity, 'Type:', cart[existingIndex].type);
+        console.log('🛒 Updated existing item:', cart[existingIndex].name, 'x', cart[existingIndex].quantity);
     } else {
-        // Add new item
         cart.push(cartItem);
-        console.log('🛒 Added new item:', cartItem.name, 'Type:', cartItem.type, 'Batch:', cartItem.batch_id);
+        console.log('🛒 Added new item:', cartItem.name, 'Type:', cartItem.type);
     }
     
     saveCartToStorage();
@@ -311,7 +511,6 @@ function addItemToCart(item) {
 // ====================================================
 
 function showNotification(message, type = 'info', duration = 3000) {
-    // Remove existing notification
     const existing = document.getElementById('cart-notification');
     if (existing) existing.remove();
     
@@ -350,7 +549,6 @@ function showNotification(message, type = 'info', duration = 3000) {
     
     document.body.appendChild(notification);
     
-    // Add CSS animations if not already present
     if (!document.getElementById('notification-styles')) {
         const style = document.createElement('style');
         style.id = 'notification-styles';
@@ -367,7 +565,6 @@ function showNotification(message, type = 'info', duration = 3000) {
         document.head.appendChild(style);
     }
     
-    // Auto remove after duration
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
@@ -377,24 +574,22 @@ function showNotification(message, type = 'info', duration = 3000) {
 }
 
 // ====================================================
-// CART REVIEW MODAL (FIXED WITH TYPE INDICATORS)
+// CART REVIEW MODAL (ENHANCED)
 // ====================================================
 
 function showCartReview() {
-    debugLog('Showing cart review');
+    debugLog('Showing smart cart review');
     
     if (cart.length === 0) {
         showNotification('Cart is empty!', 'info', 2000);
         return;
     }
     
-    // Remove existing modal
     const existingModal = document.querySelector('.cart-modal-backdrop');
     if (existingModal) existingModal.remove();
 
     const total = getCartTotal();
     
-    // Create modal structure
     const modalBackdrop = document.createElement('div');
     modalBackdrop.className = 'cart-modal-backdrop';
     
@@ -437,7 +632,7 @@ function showCartReview() {
                 max-height: 50vh;
             ">
                 ${cart.map((item, index) => {
-                    const price = item.sellPrice || item.sell_price || item.price || 0;
+                    const price = item.price || item.sellPrice || item.sell_price || 0;
                     const subtotal = price * item.quantity;
                     const itemName = item.display_name || item.name;
                     
@@ -447,7 +642,7 @@ function showCartReview() {
                         : `<span style="background:#3498db;color:white;font-size:10px;padding:2px 6px;border-radius:4px;margin-left:8px;">Base Item</span>`;
                     
                     // Batch info
-                    const batchInfo = item.batch_id ? `
+                    const batchInfo = item.batch_name ? `
                         <div style="
                             background: #e9ecef;
                             color: #7950f2;
@@ -456,13 +651,28 @@ function showCartReview() {
                             border-radius: 4px;
                             display: inline-block;
                             margin-right: 8px;
-                        ">Batch: ${item.batch_id}</div>
+                        ">${item.batch_name}</div>
                     ` : '';
                     
-                    // Selling unit conversion info
-                    const conversionInfo = item.type === 'selling_unit' && item.conversion_factor 
-                        ? `<div style="font-size:11px;color:#666;margin-top:2px;">1 Base = ${item.conversion_factor} ${item.display_name || 'units'}</div>`
-                        : '';
+                    // Smart indicator
+                    const smartIndicator = item._batch_switched ? `
+                        <div style="
+                            background: #ff9f43;
+                            color: white;
+                            font-size: 10px;
+                            padding: 2px 6px;
+                            border-radius: 4px;
+                            display: inline-block;
+                            margin-right: 8px;
+                        ">Auto-switched</div>
+                    ` : '';
+                    
+                    // Stock info
+                    const stockInfo = item.real_available !== undefined ? `
+                        <div style="font-size:11px;color:#666;margin-top:2px;">
+                            Real stock: ${item.real_available.toFixed(2)}
+                        </div>
+                    ` : '';
                     
                     return `
                         <div class="cart-item" style="
@@ -493,7 +703,8 @@ function showCartReview() {
                                     margin-bottom: 4px;
                                 ">$${price.toFixed(2)} × ${item.quantity}</div>
                                 ${batchInfo}
-                                ${conversionInfo}
+                                ${smartIndicator}
+                                ${stockInfo}
                             </div>
                             <div style="
                                 display: flex;
@@ -587,7 +798,6 @@ function showCartReview() {
 
     document.body.appendChild(modalBackdrop);
     
-    // Add hover effects for cart items
     setTimeout(() => {
         const items = document.querySelectorAll('.cart-item');
         items.forEach(item => {
@@ -602,42 +812,33 @@ function showCartReview() {
         });
     }, 100);
     
-    // Add event handlers
-    document.getElementById('close-cart-btn').onclick = () => {
-        modalBackdrop.remove();
-    };
+    // Event handlers
+    document.getElementById('close-cart-btn').onclick = () => modalBackdrop.remove();
     
     document.getElementById('clear-all-btn').onclick = () => {
-        if (confirm('Are you sure you want to clear all items from your cart?')) {
+        if (confirm('Clear all items from cart?')) {
             cart = [];
             saveCartToStorage();
             updateCartIcon();
             modalBackdrop.remove();
-            showNotification('Cart cleared successfully!', 'success', 2000);
+            showNotification('Cart cleared!', 'success', 2000);
         }
     };
     
-    document.getElementById('continue-shopping-btn').onclick = () => {
-        modalBackdrop.remove();
-    };
+    document.getElementById('continue-shopping-btn').onclick = () => modalBackdrop.remove();
     
     document.getElementById('checkout-btn').onclick = () => {
         modalBackdrop.remove();
         setTimeout(() => showPaymentModal(), 300);
     };
     
-    // Close modal when clicking outside
     modalBackdrop.onclick = (e) => {
-        if (e.target === modalBackdrop) {
-            modalBackdrop.remove();
-        }
+        if (e.target === modalBackdrop) modalBackdrop.remove();
     };
-    
-    debugLog('Cart review modal shown');
 }
 
 // ====================================================
-// PAYMENT MODAL (FIXED)
+// PAYMENT MODAL
 // ====================================================
 
 function showPaymentModal() {
@@ -645,7 +846,6 @@ function showPaymentModal() {
     
     const total = getCartTotal();
     
-    // Remove existing modal
     const existingModal = document.querySelector('.cart-modal-backdrop');
     if (existingModal) existingModal.remove();
     
@@ -654,7 +854,6 @@ function showPaymentModal() {
     
     modalBackdrop.innerHTML = `
         <div class="cart-modal-container" style="max-width: 500px;">
-            <!-- Header -->
             <div style="
                 background: linear-gradient(135deg, #1dd1a1, #10ac84);
                 color: white;
@@ -666,11 +865,10 @@ function showPaymentModal() {
                     <span>Complete Purchase</span>
                 </h2>
                 <div style="margin-top: 16px; font-size: 14px; opacity: 0.9;">
-                    Complete your purchase by confirming payment
+                    Smart batch system ensures correct stock allocation
                 </div>
             </div>
             
-            <!-- Payment Details -->
             <div style="padding: 24px;">
                 <div style="text-align: center; margin-bottom: 32px;">
                     <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Total Amount</div>
@@ -678,11 +876,10 @@ function showPaymentModal() {
                         $${total.toFixed(2)}
                     </div>
                     <div style="color: #666; font-size: 14px;">
-                        ${cart.length} item${cart.length !== 1 ? 's' : ''} in cart
+                        ${cart.length} item${cart.length !== 1 ? 's' : ''} • Smart batch tracking
                     </div>
                 </div>
                 
-                <!-- Payment Method -->
                 <div style="margin-bottom: 24px;">
                     <div style="font-weight: 600; color: #333; margin-bottom: 12px;">Payment Method</div>
                     <div style="
@@ -712,7 +909,6 @@ function showPaymentModal() {
                     </div>
                 </div>
                 
-                <!-- Action Buttons -->
                 <div style="display: flex; gap: 12px;">
                     <button id="back-to-cart-btn" style="
                         flex: 1;
@@ -750,7 +946,6 @@ function showPaymentModal() {
     
     document.body.appendChild(modalBackdrop);
     
-    // Add event handlers
     document.getElementById('back-to-cart-btn').onclick = () => {
         modalBackdrop.remove();
         setTimeout(() => showCartReview(), 300);
@@ -767,25 +962,20 @@ function showPaymentModal() {
             await completeSale({
                 method: 'cash',
                 cashAmount: total,
-                notes: 'Sale from cart system'
+                notes: 'Sale from smart batch system'
             });
             
-            // Success - close modal
             modalBackdrop.remove();
             
         } catch (error) {
-            // Error - reset button and show error
             btn.innerHTML = originalText;
             btn.disabled = false;
             showNotification(`❌ Sale failed: ${error.message}`, 'error', 5000);
         }
     };
     
-    // Close modal when clicking outside
     modalBackdrop.onclick = (e) => {
-        if (e.target === modalBackdrop) {
-            modalBackdrop.remove();
-        }
+        if (e.target === modalBackdrop) modalBackdrop.remove();
     };
 }
 
@@ -794,23 +984,16 @@ function showPaymentModal() {
 // ====================================================
 
 async function completeSale(paymentDetails = {}) {
-    console.log('🛒 Starting sale completion');
+    console.log('🛒 Starting smart sale completion');
     
     const auth = getAuth();
     const user = auth.currentUser;
-    if (!user) {
-        throw new Error("Please login first");
-    }
+    if (!user) throw new Error("Please login first");
 
-    if (!currentShopId) {
-        currentShopId = user.uid;
-    }
+    if (!currentShopId) currentShopId = user.uid;
+    if (cart.length === 0) throw new Error("Cart is empty!");
 
-    if (cart.length === 0) {
-        throw new Error("Cart is empty!");
-    }
-
-    // Prepare sale data with ALL required fields
+    // Prepare smart sale data
     const saleData = {
         shop_id: currentShopId,
         user_id: user.uid,
@@ -824,15 +1007,11 @@ async function completeSale(paymentDetails = {}) {
             // Core IDs
             item_id: item.item_id,
             main_item_id: item.main_item_id || item.item_id,
-            
-            // ✅ CRITICAL: MUST INCLUDE CATEGORY_ID
             category_id: item.category_id || 'unknown',
             
             // Item info
             name: item.name,
             display_name: item.display_name || item.name,
-            
-            // ✅ CRITICAL: TYPE MUST BE PRESERVED
             type: item.type || "main_item",
             
             // Quantity & Pricing
@@ -841,29 +1020,28 @@ async function completeSale(paymentDetails = {}) {
             sellPrice: item.price || item.sellPrice || item.sell_price || 0,
             
             // Batch info
-            batch_id: item.batch_id || item.batchId || null,
-            batchId: item.batch_id || item.batchId || null,
+            batch_id: item.batch_id,
+            batchId: item.batch_id,
             batch_remaining: item.batch_remaining || 0,
             
-            // ✅ CRITICAL: Selling unit info (only for selling units)
-            sell_unit_id: item.sell_unit_id || null,
+            // Smart fields
+            can_fulfill: item.can_fulfill !== undefined ? item.can_fulfill : true,
+            batch_switch_required: item.batch_switch_required || false,
+            real_available: item.real_available,
+            
+            // Selling unit info
+            sell_unit_id: item.sell_unit_id,
             conversion_factor: item.conversion_factor || 1,
             
-            // Unit (for backend)
+            // Unit for backend
             unit: item.type === 'selling_unit' ? (item.display_name || 'unit') : 'unit'
         })),
         payment: paymentDetails,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        cart_id: localStorage.getItem('current_cart_id') // Track which cart
     };
 
-    console.log('🛒 Sending sale data to backend:', saleData);
-    console.log('🛒 Items breakdown:', saleData.items.map(item => ({
-        name: item.name,
-        type: item.type,
-        batch_id: item.batch_id,
-        sell_unit_id: item.sell_unit_id,
-        conversion_factor: item.conversion_factor
-    })));
+    console.log('🛒 Sending smart sale data:', saleData);
 
     try {
         const response = await fetch(`${FLASK_BACKEND_URL}/complete-sale`, {
@@ -878,14 +1056,15 @@ async function completeSale(paymentDetails = {}) {
         }
 
         const result = await response.json();
-        console.log('🛒 Sale successful:', result);
+        console.log('🛒 Smart sale successful:', result);
         
-        // Clear cart
+        // Clear cart and reset cart ID
         cart = [];
+        localStorage.removeItem('current_cart_id');
         saveCartToStorage();
         updateCartIcon();
         
-        showNotification('✅ Sale completed successfully!', 'success', 5000);
+        showNotification('✅ Smart sale completed successfully!', 'success', 5000);
         
         return result;
         
@@ -896,7 +1075,7 @@ async function completeSale(paymentDetails = {}) {
 }
 
 // ====================================================
-// GLOBAL FUNCTIONS FOR CART ITEM REMOVAL
+// CART ITEM REMOVAL
 // ====================================================
 
 function removeCartItem(index) {
@@ -907,13 +1086,10 @@ function removeCartItem(index) {
         updateCartIcon();
         showNotification(`Removed ${itemName} from cart`, 'info', 2000);
         
-        // Refresh cart modal if open
         const existingModal = document.querySelector('.cart-modal-backdrop');
         if (existingModal) {
             existingModal.remove();
-            if (cart.length > 0) {
-                setTimeout(() => showCartReview(), 300);
-            }
+            if (cart.length > 0) setTimeout(() => showCartReview(), 300);
         }
     }
 }
@@ -923,21 +1099,15 @@ function removeCartItem(index) {
 // ====================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-    debugLog('Cart system initializing...');
+    console.log('🛒 Smart Cart System Initializing...');
     
-    // Load existing cart
     loadCartFromStorage();
     updateCartIcon();
     
-    // Test if cart icon is working
+    // Test cart icon
     setTimeout(() => {
-        const cartIcon = document.getElementById('sales-cart-icon');
-        if (cartIcon) {
-            console.log('✅ Cart system initialized');
-            console.log(`✅ Cart items: ${cart.length}`);
-            console.log(`✅ Cart total: $${getCartTotal().toFixed(2)}`);
-        } else {
-            console.error('❌ Cart icon not found - retrying...');
+        if (!document.getElementById('sales-cart-icon')) {
+            console.error('Cart icon not found - retrying...');
             updateCartIcon();
         }
     }, 100);
@@ -958,18 +1128,29 @@ document.addEventListener("DOMContentLoaded", () => {
         getCount: getCartCount,
         getTotal: getCartTotal,
         debug: () => {
-            console.log('🛒 CART DEBUG:', cart.map(item => ({
+            console.log('🛒 SMART CART DEBUG:', cart.map(item => ({
                 name: item.name,
                 type: item.type,
                 id: item.id,
                 batch_id: item.batch_id,
-                sell_unit_id: item.sell_unit_id,
+                can_fulfill: item.can_fulfill,
                 quantity: item.quantity
             })));
         }
     };
     
-    debugLog('Cart system ready!');
+    console.log('🛒 Smart Cart System Ready! (Draggable)');
+    console.log(`
+╔═══════════════════════════════════════════╗
+║     🧠 SMART CART SYSTEM READY           ║
+╠═══════════════════════════════════════════╣
+║ • Smart batch tracking                   ║
+║ • Real stock management                  ║
+║ • Cart-aware functionality               ║
+║ • DRAGGABLE CART ICON                    ║
+║ • Integrated with sales.js               ║
+╚═══════════════════════════════════════════╝
+`);
 });
 
 // Export main function

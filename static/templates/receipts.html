@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Receipts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .receipts-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .receipt-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .receipt-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.2s;
+        }
+        
+        .receipt-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .receipt-id {
+            font-family: monospace;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .items-count {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+        
+        .total-amount {
+            color: #2ed573;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .payment-icon {
+            font-size: 1.2rem;
+        }
+        
+        .view-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .view-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .receipt-header {
+                display: none;
+            }
+            
+            .receipt-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 20px;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Sales Receipts</h1>
+            <p>View all completed sales and receipts</p>
+        </div>
+        
+        <div class="stats-cards">
+            <div class="stat-card">
+                <h3>Total Sales</h3>
+                <div class="stat-value" id="total-sales">$0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Today's Sales</h3>
+                <div class="stat-value" id="today-sales">$0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Receipts</h3>
+                <div class="stat-value" id="total-receipts">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg. Sale</h3>
+                <div class="stat-value" id="avg-sale">$0</div>
+            </div>
+        </div>
+        
+        <div class="receipts-list">
+            <div class="receipt-header">
+                <div>Receipt ID</div>
+                <div>Items</div>
+                <div>Total</div>
+                <div>Payment</div>
+                <div>Date</div>
+            </div>
+            
+            <div id="receipts-container">
+                <div class="loading">Loading receipts...</div>
+            </div>
+        </div>
+    </div>
+    
+    <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+    
+    <script type="module">
+        import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { db } from "./firebase-config.js";
+        import { collection, query, where, orderBy, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        
+        document.addEventListener("DOMContentLoaded", async () => {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            
+            if (!user) {
+                window.location.href = "/";
+                return;
+            }
+            
+            // Get shop_id from user document
+            let shopId = user.uid;
+            try {
+                const userDoc = await getDoc(doc(db, "Users", user.uid));
+                if (userDoc.exists() && userDoc.data().shop_id) {
+                    shopId = userDoc.data().shop_id;
+                }
+            } catch (error) {
+                console.error("Error getting shop_id:", error);
+            }
+            
+            await loadReceipts(shopId);
+        });
+        
+        async function loadReceipts(shopId) {
+            const container = document.getElementById("receipts-container");
+            
+            try {
+                // Query receipts for this shop
+                const receiptsRef = collection(db, "Shops", shopId, "receipts");
+                const q = query(receiptsRef, orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📄</div>
+                            <h3>No receipts yet</h3>
+                            <p>Complete your first sale to see receipts here</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let totalSales = 0;
+                let todaySales = 0;
+                const today = new Date().toDateString();
+                
+                const receipts = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    receipts.push(data);
+                    
+                    // Calculate totals
+                    totalSales += data.total || 0;
+                    
+                    // Check if receipt is from today
+                    const receiptDate = data.timestamp?.toDate?.();
+                    if (receiptDate && receiptDate.toDateString() === today) {
+                        todaySales += data.total || 0;
+                    }
+                });
+                
+                // Update stats
+                document.getElementById('total-sales').textContent = `$${totalSales.toFixed(2)}`;
+                document.getElementById('today-sales').textContent = `$${todaySales.toFixed(2)}`;
+                document.getElementById('total-receipts').textContent = receipts.length;
+                document.getElementById('avg-sale').textContent = receipts.length > 0 ? 
+                    `$${(totalSales / receipts.length).toFixed(2)}` : '$0';
+                
+                // Render receipts
+                container.innerHTML = receipts.map(receipt => `
+                    <div class="receipt-item">
+                        <div class="receipt-id">${receipt.receipt_id}</div>
+                        <div>
+                            <span class="items-count">${receipt.items?.length || 0} items</span>
+                        </div>
+                        <div class="total-amount">$${(receipt.total || 0).toFixed(2)}</div>
+                        <div class="payment-method">
+                            <span class="payment-icon">
+                                ${receipt.payment?.method === 'cash' ? '💰' : 
+                                  receipt.payment?.method === 'mobile' ? '📱' : 
+                                  receipt.payment?.method === 'card' ? '💳' : '📝'}
+                            </span>
+                            <span>${receipt.payment?.method || 'unknown'}</span>
+                        </div>
+                        <div>
+                            ${formatDate(receipt.timestamp)}
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error("Error loading receipts:", error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h3>Error loading receipts</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function formatDate(timestamp) {
+            if (!timestamp) return "Unknown date";
+            
+            try {
+                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            } catch (e) {
+                return "Invalid date";
+            }
+        }
+    </script>
+</body>
+</html>

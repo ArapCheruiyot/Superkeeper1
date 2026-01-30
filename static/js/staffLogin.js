@@ -52,6 +52,8 @@ function setStaffSession(staffCtx) {
 // 1) INJECT STAFF LOGIN BUTTON ON HOME PAGE
 // ============================================
 function injectStaffLoginButton() {
+  console.log("🔍 staffLogin.js: Looking for Google button...");
+  
   const googleSignInBtn = document.getElementById("google-signin-btn");
 
   if (!googleSignInBtn) {
@@ -59,42 +61,50 @@ function injectStaffLoginButton() {
     return;
   }
 
+  console.log("✅ staffLogin.js: Google button found:", googleSignInBtn);
+
   // Prevent double-injection
-  if (document.getElementById("staff-signin-btn")) return;
+  if (document.getElementById("staff-signin-btn")) {
+    console.log("ℹ️ Staff button already exists");
+    return;
+  }
 
   const staffLoginBtn = document.createElement("button");
   staffLoginBtn.id = "staff-signin-btn";
-  staffLoginBtn.innerHTML = `<span>Staff Log In</span>`;
+  staffLoginBtn.innerHTML = `Staff Log In`;
+  staffLoginBtn.className = "btn-staff"; // Add a class for easier styling
 
+  // SIMPLER STYLING - will be side by side with Google button
   staffLoginBtn.style.cssText = `
-    margin-top: 15px;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: inline-block;
+    margin-left: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    width: 100%;
-    max-width: 300px;
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+    vertical-align: middle;
   `;
 
   staffLoginBtn.addEventListener("mouseenter", () => {
     staffLoginBtn.style.transform = "translateY(-2px)";
-    staffLoginBtn.style.boxShadow = "0 6px 20px rgba(102, 126, 234, 0.6)";
+    staffLoginBtn.style.boxShadow = "0 4px 15px rgba(102, 126, 234, 0.5)";
   });
 
   staffLoginBtn.addEventListener("mouseleave", () => {
     staffLoginBtn.style.transform = "translateY(0)";
-    staffLoginBtn.style.boxShadow = "0 4px 15px rgba(102, 126, 234, 0.4)";
+    staffLoginBtn.style.boxShadow = "0 2px 10px rgba(102, 126, 234, 0.3)";
   });
 
   staffLoginBtn.addEventListener("click", handleStaffLogin);
 
-  googleSignInBtn.parentNode.insertBefore(staffLoginBtn, googleSignInBtn.nextSibling);
+  // Insert it next to the Google button
+  googleSignInBtn.parentNode.appendChild(staffLoginBtn);
   console.log("✅ Staff Login button injected successfully");
 }
 
@@ -222,14 +232,49 @@ async function findStaffByEmail(email) {
 }
 
 // ============================================
-// 4) INIT ON PAGE LOAD
+// 4) MULTIPLE INIT METHODS FOR RELIABILITY
 // ============================================
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("📄 staffLogin.js loaded");
 
-  if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
-    injectStaffLoginButton();
-  }
+// Method 1: Run when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("📄 staffLogin.js: DOMContentLoaded");
+  initStaffLogin();
 });
+
+// Method 2: Run when window loads
+window.addEventListener("load", () => {
+  console.log("📄 staffLogin.js: window.load");
+  initStaffLogin();
+});
+
+// Method 3: Run immediately if DOM is already loaded
+if (document.readyState === 'loading') {
+  console.log("📄 staffLogin.js: Document still loading");
+} else {
+  console.log("📄 staffLogin.js: Document already ready, running init");
+  initStaffLogin();
+}
+
+// Method 4: Try again after a short delay (in case other scripts interfere)
+setTimeout(() => {
+  console.log("📄 staffLogin.js: Delayed init check");
+  if (!document.getElementById("staff-signin-btn")) {
+    initStaffLogin();
+  }
+}, 1000);
+
+function initStaffLogin() {
+  console.log("🚀 staffLogin.js: Initializing...");
+  
+  // Only inject on homepage
+  if (window.location.pathname === "/" || 
+      window.location.pathname === "/index.html" ||
+      window.location.pathname === "") {
+    console.log("🏠 staffLogin.js: On homepage, injecting button...");
+    injectStaffLoginButton();
+  } else {
+    console.log("🏠 staffLogin.js: Not on homepage, skipping");
+  }
+}
 
 console.log("✅ staffLogin.js module loaded");

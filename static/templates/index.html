@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superkeeper - Inventory POS for Small Businesses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- ADD THIS NEW CSS FILE -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    <style>
+        /* TEMPORARY: Add this to your styles.css if homepage.css doesn't exist yet */
+        /* [PASTE ALL THE CSS FROM PREVIOUS RESPONSE HERE - I'll provide a clean mobile-optimized version below] */
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <nav class="main-nav">
+            <!-- [YOUR LOGO] -->
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Superkeeper Logo" width="150">
+            
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#story">Our Story</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#testimonials">Success Stories</a>
+            </div>
+            
+            <button class="cta-nav" onclick="document.getElementById('google-signin-btn').click()">
+                Get Started Free
+            </button>
+        </nav>
+
+        <div class="hero-content">
+            <div class="hero-text">
+                <!-- [TAGLINE - EDITABLE] -->
+                <div class="tagline">
+                    <span class="tag">Made for small spaces</span>
+                    <span class="tag">Big on features</span>
+                </div>
+                
+                <!-- [MAIN HEADLINE - EDIT THIS] -->
+                <h1>
+                    From <span class="highlight">Market Stall</span> to 
+                    <span class="highlight">Supermarket</span> – 
+                    One Simple System
+                </h1>
+                
+                <!-- [SUBHEADING - EDIT THIS] -->
+                <p class="subtitle">
+                    <span class="stat">500+</span> small shops already tracking inventory on phones. 
+                    No computers. No experts. Just your mobile and dreams.
+                </p>
+                
+                <!-- Benefits Grid -->
+                <div class="benefits-grid">
+                    <div class="benefit">
+                        <div class="benefit-icon">📱</div>
+                        <h3>Mobile-First</h3>
+                        <p>Works anywhere – even without internet</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="benefit-icon">👥</div>
+                        <h3>Staff Ready</h3>
+                        <p>Add employees with one tap, control what they see</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="benefit-icon">📈</div>
+                        <h3>Grows With You</h3>
+                        <p>Start free, upgrade as you expand</p>
+                    </div>
+                </div>
+                
+                <!-- CTA Buttons -->
+                <div class="hero-cta">
+                    <button id="google-signin-btn" class="cta-primary">
+                        <span>Start Free – No Credit Card</span>
+                    </button>
+                    <button id="staff-signin-btn" class="cta-secondary" onclick="window.location.href='/staff-login'">
+                        <span>Staff Login</span>
+                    </button>
+                </div>
+                
+                <!-- [SOCIAL PROOF - ADD REAL USERS LATER] -->
+                <div class="social-proof">
+                    <div class="avatars">
+                        <!-- [REPLACE THESE WITH ACTUAL USER PHOTOS LATER] -->
+                        <img src="https://i.pravatar.cc/30?img=1" alt="User">
+                        <img src="https://i.pravatar.cc/30?img=2" alt="User">
+                        <img src="https://i.pravatar.cc/30?img=3" alt="User">
+                        <img src="https://i.pravatar.cc/30?img=4" alt="User">
+                    </div>
+                    <p>Trusted by <strong>shop owners</strong> across Nairobi, Mombasa, Kampala</p>
+                </div>
+            </div>
+            
+            <!-- Hero Visual -->
+            <div class="hero-visual">
+                <div class="visual-comparison">
+                    <div class="before">
+                        <div class="visual-label">Before</div>
+                        <div class="visual-content">
+                            <!-- [PAPER NOTEBOOK VISUAL - KEEP AS IS] -->
+                            <div class="paper-notebook"></div>
+                            <p>Paper chaos, lost receipts, guesswork</p>
+                        </div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="after">
+                        <div class="visual-label">After Superkeeper</div>
+                        <div class="visual-content">
+                            <!-- [ADD YOUR ACTUAL APP SCREENSHOT HERE] -->
+                            <div class="phone-mockup">
+                                <img src="{{ url_for('static', filename='images/app-screenshot.png') }}" 
+                                     alt="Superkeeper App Dashboard"
+                                     onerror="this.style.display='none'; this.parentElement.innerHTML='📱 App Preview';">
+                            </div>
+                            <p>Real-time stock, staff tracking, sales insights</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE STORY SECTION -->
+    <section class="story-section" id="story">
+        <div class="container">
+            <div class="section-header">
+                <!-- [EDIT THIS HEADLINE] -->
+                <h2>Built in a Small Room, For Every Small Business</h2>
+                <p class="section-subtitle">Our founder's journey from frustration to solution</p>
+            </div>
+            
+            <div class="story-timeline">
+                <div class="story-card">
+                    <div class="story-number">01</div>
+                    <h3>The Problem</h3>
+                    <!-- [EDIT THIS - MAKE IT YOUR STORY] -->
+                    <p>"I watched small shop owners struggle with paper records. They needed something simple, affordable, and mobile-first."</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-number">02</div>
+                    <h3>The Vision</h3>
+                    <!-- [EDIT THIS] -->
+                    <p>"What if every business, no matter how small, could have enterprise-grade tools? No installations. Just their phone."</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-number">03</div>
+                    <h3>The Solution</h3>
+                    <!-- [EDIT THIS] -->
+                    <p>"Superkeeper was born: a mobile POS that works anywhere, grows with you, and puts business intelligence in your pocket."</p>
+                </div>
+            </div>
+            
+            <!-- Founder Quote -->
+            <div class="founder-quote">
+                <div class="quote-content">
+                    <!-- [EDIT THIS QUOTE - MAKE IT YOURS] -->
+                    <p class="quote-text">"We're not just building software. We're enabling dreams. Every shilling a business saves helps a family. Every minute saved creates opportunity."</p>
+                    <div class="founder-info">
+                        <!-- [ADD YOUR PHOTO HERE] -->
+                        <img src="{{ url_for('static', filename='images/founder.jpg') }}" 
+                             alt="Founder"
+                             onerror="this.src='https://i.pravatar.cc/60?img=11'">
+                        <div>
+                            <h4>[YOUR NAME]</h4>
+                            <p>Founder, Superkeeper</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need, Nothing You Don't</h2>
+                <p class="section-subtitle">Designed for simplicity, built to scale</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- [THESE FEATURES ARE ALREADY BUILT IN YOUR APP] -->
+                <div class="feature-card">
+                    <div class="feature-icon">📸</div>
+                    <h3>Snap & Track</h3>
+                    <p>Take photos of items. We track them automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👮‍♂️</div>
+                    <h3>Staff Control</h3>
+                    <p>RBAC system - control what each employee can see/do.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Smart Alerts</h3>
+                    <p>Low stock alerts prevent lost sales.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Sales Tracking</h3>
+                    <p>Track cash & digital payments in one place.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Works Offline</h3>
+                    <p>Syncs when back online - no internet needed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Grows With You</h3>
+                    <p>From 10 items to 10,000 items - same system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Pricing That Makes Sense</h2>
+                <p class="section-subtitle">Pay as you grow. Cancel anytime.</p>
+            </div>
+            
+            <div class="pricing-cards">
+                <!-- FREE TIER -->
+                <div class="pricing-card free-tier">
+                    <div class="pricing-header">
+                        <h3>Starter</h3>
+                        <div class="price">FREE</div>
+                        <p class="price-sub">For testing & small shops</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ Up to 50 items</li>
+                        <li>✓ 1 staff member</li>
+                        <li>✓ Basic stock tracking</li>
+                        <li>✓ Mobile app access</li>
+                        <li>✗ No advanced analytics</li>
+                        <li>✗ No priority support</li>
+                    </ul>
+                    <button class="pricing-cta" onclick="document.getElementById('google-signin-btn').click()">
+                        Start Free
+                    </button>
+                </div>
+                
+                <!-- PRO TIER -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="pricing-header">
+                        <h3>Pro Shop</h3>
+                        <!-- [SET YOUR PRICE HERE] -->
+                        <div class="price">KSh 500<span>/month</span></div>
+                        <p class="price-sub">Via M-Pesa or Cash</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ Up to 500 items</li>
+                        <li>✓ Up to 5 staff members</li>
+                        <li>✓ Stock alerts & notifications</li>
+                        <li>✓ Sales analytics</li>
+                        <li>✓ Priority WhatsApp support</li>
+                        <li>✓ Export data (CSV)</li>
+                    </ul>
+                    <!-- [ADD YOUR MPESA NUMBER HERE] -->
+                    <button class="pricing-cta primary" onclick="alert('Send KSh 500 to M-Pesa: 07XX XXX XXX\\nThen WhatsApp receipt to: 07XX XXX XXX')">
+                        Pay via M-Pesa
+                    </button>
+                    <p class="payment-note">
+                        Send to: <strong>[YOUR MPESA NUMBER]</strong><br>
+                        WhatsApp receipt for activation
+                    </p>
+                </div>
+                
+                <!-- BUSINESS TIER -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Business</h3>
+                        <div class="price">KSh 1,500<span>/month</span></div>
+                        <p class="price-sub">For growing businesses</p>
+                    </div>
+                    <ul class="features-list">
+                        <li>✓ Unlimited items</li>
+                        <li>✓ Up to 20 staff</li>
+                        <li>✓ Advanced reporting</li>
+                        <li>✓ Multi-location support</li>
+                        <li>✓ Custom training</li>
+                        <li>✓ 24/7 phone support</li>
+                    </ul>
+                    <button class="pricing-cta" onclick="alert('Contact: [YOUR EMAIL] or WhatsApp: [YOUR NUMBER]')">
+                        Contact Us
+                    </button>
+                </div>
+            </div>
+            
+            <!-- DONATION BOX -->
+            <div class="donation-box">
+                <div class="donation-content">
+                    <h3>❤️ Support Our Mission</h3>
+                    <p>We're building Superkeeper to help small businesses thrive. Your donation helps improve features for shop owners who can't afford to pay yet.</p>
+                    <div class="donation-actions">
+                        <!-- [ADD YOUR MPESA NUMBER HERE] -->
+                        <button class="donate-btn" onclick="alert('Support Small Businesses\\n\\nM-Pesa: [YOUR NUMBER]\\n\\nThank you for your support!')">
+                            Donate via M-Pesa
+                        </button>
+                        <p class="donation-note">Every shilling makes a difference</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SUCCESS STORIES -->
+    <section class="testimonials-section" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>From Paper to Profit</h2>
+                <p class="section-subtitle">Real shops. Real results.</p>
+            </div>
+            
+            <div class="testimonial-cards">
+                <!-- [ADD REAL TESTIMONIALS WHEN YOU HAVE THEM] -->
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"I used to lose count of my vegetables every day. Now I know exactly what's selling."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/50?img=5" alt="Mama Nelly">
+                        <div>
+                            <h4>Mama Nelly</h4>
+                            <p>Vegetable Stall, Nairobi</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Adding my two employees was so easy. Now I can track everything from my phone."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/50?img=6" alt="John">
+                        <div>
+                            <h4>John Mwangi</h4>
+                            <p>Electronics Shop, Mombasa</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"The low stock alerts saved me three times last week. I never run out anymore!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/50?img=7" alt="Sarah">
+                        <div>
+                            <h4>Sarah Akinyi</h4>
+                            <p>Boutique, Kampala</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Transform Your Business?</h2>
+            <p>Join shop owners who said goodbye to paper chaos</p>
+            <div class="cta-buttons">
+                <button id="google-signin-btn-final" class="cta-large">
+                    <span>Start Free Today</span>
+                </button>
+                <p class="cta-note">No credit card required. Set up in 5 minutes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Superkeeper Logo" width="120">
+                    <p>Inventory & POS for businesses that start small and dream big.</p>
+                    <div class="social-links">
+                        <!-- [ADD YOUR SOCIAL LINKS] -->
+                        <a href="https://youtube.com/[YOUR_CHANNEL]">YouTube</a>
+                        <a href="https://facebook.com/[YOUR_PAGE]">Facebook</a>
+                        <a href="https://wa.me/[YOUR_NUMBER]">WhatsApp</a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#pricing">Pricing</a>
+                        <a href="#">Updates</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <a href="#">Help Center</a>
+                        <!-- [ADD YOUR WHATSAPP NUMBER] -->
+                        <a href="https://wa.me/[YOUR_NUMBER]">WhatsApp: [YOUR NUMBER]</a>
+                        <!-- [ADD YOUR EMAIL] -->
+                        <a href="mailto:[YOUR_EMAIL]">Email Us</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="#story">Our Story</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Careers</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 Superkeeper. Built with ❤️ for small businesses.</p>
+                <p>Accepting donations to help more shops go digital: <strong>M-Pesa [YOUR NUMBER]</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script type="module" src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
+    
+    <script>
+        // Connect all CTA buttons
+        document.getElementById('google-signin-btn-final').addEventListener('click', function() {
+            document.getElementById('google-signin-btn').click();
+        });
+    </script>
+</body>
+</html>

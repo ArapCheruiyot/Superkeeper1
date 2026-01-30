@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- COMPACT HOMEPAGE - EVERYTHING FITS ON SCREEN -->
+<div class="compact-homepage">
+    
+    <!-- THIN BORDER CONTAINER -->
+    <div class="compact-container">
+        
+        <!-- Header with Top-Right Buttons -->
+        <div class="compact-header">
+            <!-- Just one button on the right -->
+            <div class="header-buttons">
+                <button class="btn-start" id="google-signin-btn">
+                    Start Free
+                </button>
+            </div>
+        </div>
+        
+        <!-- Compact Navigation -->
+        <div class="compact-nav">
+            <nav>
+                <a href="/features">Features</a>
+                <a href="/story">Our Story</a>
+                <a href="/pricing">Pricing</a>
+                <a href="/testimonials">Success Stories</a>
+            </nav>
+        </div>
+        
+        <!-- Main Content - Fits perfectly -->
+        <div class="compact-content">
+            <!-- Logo on left -->
+            <div class="compact-logo">
+                <div class="logo-pulse" id="logoPulse">SK</div>
+            </div>
+            
+            <!-- Content on right -->
+            <div class="compact-text">
+                <h1>Superkeeper</h1>
+                <p class="tagline">Inventory for small shops</p>
+                
+                <div class="benefit">
+                    <span>✓</span> Track stock on phone
+                </div>
+                <div class="benefit">
+                    <span>✓</span> Manage staff easily
+                </div>
+                <div class="benefit">
+                    <span>✓</span> See sales in real-time
+                </div>
+                
+                <!-- Main CTA Button (same as header) -->
+                <button class="btn-main-cta" id="google-signin-btn-mobile">
+                    Start Free Forever
+                </button>
+                
+                <p class="note">No credit card • Setup in 5 minutes</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- DEBUG SCRIPT - Helps identify issues -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("🔍 DEBUG: Homepage loaded");
+    
+    // Check if button exists
+    const button = document.getElementById("google-signin-btn");
+    console.log("✅ Button exists:", !!button);
+    console.log("📝 Button details:", button);
+    
+    if (button) {
+        // Add a test click handler
+        button.addEventListener("click", function() {
+            console.log("🟢 DEBUG: Button clicked - basic click works!");
+        });
+    }
+});
+</script>
+
+<!-- Import your login.js file - CHANGED FROM auth.js TO login.js -->
+<script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/staffLogin.js') }}"></script>
+
+<!-- Your existing JavaScript with fixes -->
+<script>
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🎨 Setting up animations...");
+    
+    // Fix logo animation - check if element exists first
+    let logo = document.getElementById('logoPulse');
+    
+    if (logo) {
+        console.log("✅ Logo element found, starting animation");
+        let beatCount = 0;
+        const logos = ['SK', '📱', '📦', '💰', '👥', '📊', '✓', '🚀'];
+
+        setInterval(() => {
+            logo.textContent = logos[beatCount % logos.length];
+            logo.style.transform = 'scale(1.05)';
+            setTimeout(() => logo.style.transform = 'scale(1)', 100);
+            beatCount++;
+        }, 857);
+    } else {
+        console.warn("⚠️ Logo element not found for animation");
+    }
+
+    // Make mobile button also trigger Google login
+    const mobileBtn = document.getElementById('google-signin-btn-mobile');
+    if (mobileBtn) {
+        console.log("✅ Mobile button found");
+        mobileBtn.addEventListener('click', function() {
+            console.log("📱 Mobile button clicked");
+            // Trigger the Google button click
+            const googleBtn = document.getElementById('google-signin-btn');
+            if (googleBtn) {
+                console.log("🔄 Triggering Google button click");
+                googleBtn.click();
+            }
+        });
+    } else {
+        console.warn("⚠️ Mobile button not found");
+    }
+    
+    console.log("🎯 Homepage setup complete");
+});
+</script>
+
+<style>
+/* COMPACT HOMEPAGE - FITS ON SCREEN */
+.compact-homepage {
+    height: calc(100vh - 120px); /* Leave space for footer ribbon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem 1rem;
+    background: white;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+/* Compact container */
+.compact-container {
+    width: 100%;
+    max-width: 1000px; /* Smaller than before */
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1.5rem; /* Less padding */
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* COMPACT HEADER - Single Button on Right */
+.compact-header {
+    display: flex;
+    justify-content: flex-end; /* Button to the right */
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.btn-start {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-start:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Compact navigation */
+.compact-nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.compact-nav nav {
+    display: flex;
+    gap: 1.5rem; /* Smaller gap */
+}
+
+.compact-nav a {
+    text-decoration: none;
+    color: #475569;
+    font-size: 0.85rem; /* Smaller font */
+    font-weight: 500;
+    padding: 0.25rem 0;
+    transition: color 0.2s;
+}
+
+.compact-nav a:hover {
+    color: #3b82f6;
+}
+
+/* Compact content layout */
+.compact-content {
+    display: flex;
+    align-items: center;
+    gap: 3rem; /* Less gap */
+    padding: 0.5rem;
+}
+
+/* Compact logo */
+.compact-logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px; /* Smaller */
+}
+
+.logo-pulse {
+    font-size: 6rem; /* Smaller */
+    font-weight: 800;
+    color: #3b82f6;
+    transition: transform 0.2s;
+    animation: gentle-pulse 1.5s infinite;
+}
+
+@keyframes gentle-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.9; }
+}
+
+/* Compact text */
+.compact-text {
+    flex: 1;
+    max-width: 450px; /* Smaller */
+}
+
+.compact-text h1 {
+    font-size: 2.5rem; /* Smaller */
+    margin: 0 0 0.5rem 0;
+    color: #1e293b;
+    line-height: 1.1;
+}
+
+.compact-text .tagline {
+    font-size: 1rem; /* Smaller */
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.compact-text .benefit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1rem; /* Smaller */
+    color: #475569;
+}
+
+.compact-text .benefit span {
+    color: #10b981;
+    font-weight: bold;
+}
+
+/* Main CTA Button */
+.btn-main-cta {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.85rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0 0.75rem 0;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-main-cta:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.compact-text .note {
+    font-size: 0.75rem; /* Smaller */
+    color: #94a3b8;
+    text-align: center;
+    margin: 0.5rem 0;
+}
+
+/* Responsive - ensure it fits */
+@media (max-width: 768px) {
+    .compact-homepage {
+        height: calc(100vh - 100px);
+        padding: 5rem 0.5rem 0.5rem;
+    }
+    
+    .compact-container {
+        border: none;
+        padding: 1rem;
+        box-shadow: none;
+        max-width: 100%;
+    }
+    
+    .compact-content {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .compact-logo {
+        min-height: 150px;
+    }
+    
+    .logo-pulse {
+        font-size: 4rem;
+    }
+    
+    .compact-nav nav {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .compact-nav a {
+        font-size: 0.8rem;
+    }
+    
+    .compact-text h1 {
+        font-size: 2rem;
+    }
+    
+    /* Center header button on mobile */
+    .compact-header {
+        justify-content: center;
+    }
+    
+    .header-buttons {
+        width: 100%;
+    }
+    
+    .btn-start {
+        width: 100%;
+        max-width: 300px;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+    
+    .site-footer {
+        padding: 0.5rem !important;
+        font-size: 0.7rem;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 0.25rem;
+        text-align: center;
+    }
+}
+
+@media (max-height: 700px) {
+    /* For shorter screens */
+    .compact-homepage {
+        height: calc(100vh - 80px);
+        padding: 4rem 0.5rem 0.5rem;
+    }
+    
+    .compact-container {
+        padding: 1rem;
+    }
+    
+    .compact-logo {
+        min-height: 120px;
+    }
+    
+    .logo-pulse {
+        font-size: 4rem;
+    }
+    
+    .compact-text h1 {
+        font-size: 1.8rem;
+    }
+    
+    .compact-text .benefit {
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+</style>
+{% endblock %}

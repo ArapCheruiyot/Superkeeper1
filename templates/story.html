@@ -1,0 +1,1398 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- STORY PAGE - ORGANIZED VERSION -->
+<div class="story-page">
+    
+    <!-- Fixed Navigation Bar -->
+    <nav class="story-nav-bar">
+        <a href="{{ url_for('home') }}" class="nav-home">
+            ← Back to Home
+        </a>
+        
+        <div class="nav-sections">
+            <a href="#journey">The Journey</a>
+            <a href="#founder">Founder</a>
+            <a href="#team">Our Team</a>
+            <a href="#vision">Vision</a>
+        </div>
+        
+        <button class="nav-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            ↑ Top
+        </button>
+    </nav>
+    
+    <!-- Hero Section -->
+    <header class="story-hero">
+        <h1>Our Story: From Small Room to Big Dreams</h1>
+        <p class="hero-subtitle">
+            How one developer's frustration became a solution for thousands of small businesses.
+        </p>
+        
+        <div class="hero-quote">
+            <blockquote>
+                "We're not just building software. We're enabling dreams. Every shilling a business saves helps a family. Every minute saved creates opportunity."
+            </blockquote>
+            <div class="quote-author">
+                <span class="author-name">Moses Kipkorir Cheruiyot</span>
+                <span class="author-role">Founder & CEO, Superkeeper</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content Sections -->
+    <div class="story-sections">
+        
+        <!-- The Journey Timeline -->
+        <section id="journey" class="journey-section">
+            <div class="section-header">
+                <h2>The Journey</h2>
+                <p>From idea to impact in 3 years</p>
+            </div>
+            
+            <!-- Timeline Navigation -->
+            <div class="timeline-nav">
+                <button class="timeline-nav-btn active" data-year="2021">2021</button>
+                <button class="timeline-nav-btn" data-year="2022">2022</button>
+                <button class="timeline-nav-btn" data-year="2023">2023</button>
+                <button class="timeline-nav-btn" data-year="2024">2024</button>
+            </div>
+            
+            <!-- Timeline Content -->
+            <div class="timeline-content">
+                <!-- 2021 - The Frustration -->
+                <article class="timeline-card active" id="year-2021">
+                    <div class="timeline-marker">
+                        <span class="marker-year">2021</span>
+                        <div class="marker-line"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>The Frustration</h3>
+                        <div class="card-body">
+                            <p>
+                                While working as a developer in Nairobi, I visited my aunt's small vegetable stall. 
+                                I watched her struggle with paper records that would get lost, smudged, or misplaced.
+                            </p>
+                            
+                            <div class="challenges">
+                                <h4>The Challenges:</h4>
+                                <div class="challenge-list">
+                                    <div class="challenge-item">
+                                        <span class="challenge-icon">📝</span>
+                                        <span>Paper records getting wet in the rain</span>
+                                    </div>
+                                    <div class="challenge-item">
+                                        <span class="challenge-icon">⏰</span>
+                                        <span>Hours spent counting inventory daily</span>
+                                    </div>
+                                    <div class="challenge-item">
+                                        <span class="challenge-icon">💸</span>
+                                        <span>No way to track sales trends</span>
+                                    </div>
+                                    <div class="challenge-item">
+                                        <span class="challenge-icon">🤔</span>
+                                        <span>Constant guesswork about what to stock</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-quote">
+                                <p>"There has to be a better way. Technology should solve real problems, not create them."</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- 2022 - The Discovery -->
+                <article class="timeline-card" id="year-2022">
+                    <div class="timeline-marker">
+                        <span class="marker-year">2022</span>
+                        <div class="marker-line"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>The Discovery</h3>
+                        <div class="card-body">
+                            <p>
+                                I spent months visiting small shops across Nairobi, Mombasa, and Kisumu. 
+                                The pattern was clear: smartphones were everywhere, but business tools weren't.
+                            </p>
+                            
+                            <div class="insights">
+                                <h4>Key Insights:</h4>
+                                <div class="insights-grid">
+                                    <div class="insight-card">
+                                        <div class="insight-icon">📱</div>
+                                        <h5>Mobile First</h5>
+                                        <p>Every shop owner had a smartphone</p>
+                                    </div>
+                                    <div class="insight-card">
+                                        <div class="insight-icon">💰</div>
+                                        <h5>Affordable</h5>
+                                        <p>Needed solutions under KSh 1000/month</p>
+                                    </div>
+                                    <div class="insight-card">
+                                        <div class="insight-icon">🌐</div>
+                                        <h5>Works Offline</h5>
+                                        <p>Intermittent internet was a reality</p>
+                                    </div>
+                                    <div class="insight-card">
+                                        <div class="insight-icon">👥</div>
+                                        <h5>Simple Staff</h5>
+                                        <p>Easy employee management needed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-quote">
+                                <p>"What if every business, no matter how small, could have enterprise-grade tools? No installations. Just their phone."</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- 2023 - The Solution -->
+                <article class="timeline-card" id="year-2023">
+                    <div class="timeline-marker">
+                        <span class="marker-year">2023</span>
+                        <div class="marker-line"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>The Solution</h3>
+                        <div class="card-body">
+                            <p>
+                                Working from a small room in Nairobi, the first version of Superkeeper was born. 
+                                We focused on three core principles:
+                            </p>
+                            
+                            <div class="principles">
+                                <div class="principle-card">
+                                    <div class="principle-icon">⚡</div>
+                                    <h5>Simple</h5>
+                                    <p>No training needed. Just pick up and use.</p>
+                                </div>
+                                <div class="principle-card">
+                                    <div class="principle-icon">📱</div>
+                                    <h5>Mobile-First</h5>
+                                    <p>Built for smartphones from day one.</p>
+                                </div>
+                                <div class="principle-card">
+                                    <div class="principle-icon">🚀</div>
+                                    <h5>Scalable</h5>
+                                    <p>Grows from 10 items to 10,000 items.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-quote">
+                                <p>"Superkeeper was born: a mobile POS that works anywhere, grows with you, and puts business intelligence in your pocket."</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- 2024 - The Impact -->
+                <article class="timeline-card" id="year-2024">
+                    <div class="timeline-marker">
+                        <span class="marker-year">2024</span>
+                        <div class="marker-line"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3>The Impact</h3>
+                        <div class="card-body">
+                            <p>
+                                Today, Superkeeper helps over 500 small businesses across East Africa. 
+                                But the numbers only tell part of the story.
+                            </p>
+                            
+                            <div class="impact-stats">
+                                <div class="stat-card">
+                                    <div class="stat-number">500+</div>
+                                    <div class="stat-label">Businesses Empowered</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">95%</div>
+                                    <div class="stat-label">Time Saved Weekly</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">30%</div>
+                                    <div class="stat-label">Average Sales Increase</div>
+                                </div>
+                            </div>
+                            
+                            <div class="impact-stories">
+                                <h4>Real Impact Stories:</h4>
+                                <ul>
+                                    <li>Mama Nelly doubled her vegetable sales</li>
+                                    <li>John reduced inventory losses by 80%</li>
+                                    <li>Sarah hired her first employee with confidence</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+        
+        <!-- Founder Section -->
+        <section id="founder" class="founder-section">
+            <div class="section-header">
+                <h2>The Founder</h2>
+                <p>Meet the person behind the vision</p>
+            </div>
+            
+            <div class="founder-profile">
+                <div class="founder-image">
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename='images/founder.png') }}" 
+                             alt="Moses Kipkorir Cheruiyot"
+                             onerror="this.src='https://i.pravatar.cc/300?img=11'">
+                        <div class="image-badge">
+                            <span>Founder & CEO</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="founder-details">
+                    <h3>Moses Kipkorir Cheruiyot</h3>
+                    <p class="founder-title">Software Developer & Entrepreneur</p>
+                    
+                    <div class="founder-bio">
+                        <p>
+                            Born and raised in Kenya, Moses has always been passionate about using 
+                            technology to solve real-world problems. With a background in software 
+                            development and business, he saw firsthand the challenges small business 
+                            owners face in the digital age.
+                        </p>
+                        <p>
+                            What started as a simple tool to help his aunt's vegetable stall has grown 
+                            into Superkeeper - a platform empowering thousands of entrepreneurs across 
+                            East Africa.
+                        </p>
+                    </div>
+                    
+                    <div class="founder-values">
+                        <h4>Core Values:</h4>
+                        <div class="values-grid">
+                            <div class="value-item">
+                                <div class="value-icon">💡</div>
+                                <h5>Accessibility</h5>
+                                <p>Technology should be accessible to everyone</p>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-icon">❤️</div>
+                                <h5>Empathy</h5>
+                                <p>Understand the problem before building solutions</p>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-icon">🤝</div>
+                                <h5>Community</h5>
+                                <p>Business success should benefit the community</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="founder-contact">
+                        <h4>Connect:</h4>
+                        <div class="contact-links">
+                            <a href="https://linkedin.com/in/moses-cheruiyot" target="_blank">LinkedIn</a>
+                            <a href="https://twitter.com/moses_cheruiyot" target="_blank">Twitter</a>
+                            <a href="mailto:cheruiyot171@gmail.com">Email</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Team Section -->
+        <section id="team" class="team-section">
+            <div class="section-header">
+                <h2>Our Team</h2>
+                <p>Small team, big dreams</p>
+            </div>
+            
+            <div class="team-values">
+                <div class="value-card">
+                    <div class="card-icon">🎯</div>
+                    <h4>Mission-Driven</h4>
+                    <p>Every feature we build solves a real problem for small business owners.</p>
+                </div>
+                <div class="value-card">
+                    <div class="card-icon">🚀</div>
+                    <h4>Fast & Iterative</h4>
+                    <p>We build fast, listen to feedback, and improve constantly.</p>
+                </div>
+                <div class="value-card">
+                    <div class="card-icon">❤️</div>
+                    <h4>Customer-Centric</h4>
+                    <p>Our customers are our partners. We succeed when they succeed.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Vision Section -->
+        <section id="vision" class="vision-section">
+            <div class="section-header">
+                <h2>Our Vision</h2>
+                <p>Building for tomorrow, today</p>
+            </div>
+            
+            <div class="vision-content">
+                <p class="vision-statement">
+                    We're not stopping at 500 businesses. Our goal is to empower 
+                    <strong>100,000 small businesses</strong> across Africa by 2030. 
+                    To help them grow, create jobs, and build thriving communities.
+                </p>
+                
+                <div class="vision-goals">
+                    <div class="goal-card">
+                        <div class="goal-icon">🎯</div>
+                        <h5>Expand Across Africa</h5>
+                        <p>Bring Superkeeper to 10 more African countries</p>
+                    </div>
+                    <div class="goal-card">
+                        <div class="goal-icon">📱</div>
+                        <h5>More Features</h5>
+                        <p>Add accounting, invoicing, and supplier management</p>
+                    </div>
+                    <div class="goal-card">
+                        <div class="goal-icon">👥</div>
+                        <h5>Community Building</h5>
+                        <p>Create business networks and mentorship programs</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vision-cta">
+                <h3>Want to Join Our Journey?</h3>
+                <p>Every new user brings us closer to empowering 100,000 businesses.</p>
+                <div class="cta-buttons">
+                    <button onclick="handleGetStarted()" class="cta-primary">
+                        Start Using Superkeeper
+                    </button>
+                    <a href="{{ url_for('testimonials') }}" class="cta-secondary">
+                        See Success Stories
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Sticky CTA -->
+    <div class="sticky-cta" id="storyStickyCta">
+        <div class="cta-content">
+            <div class="cta-text">
+                <strong>Inspired by our story?</strong>
+                <span>Join thousands of businesses using Superkeeper</span>
+            </div>
+            <button onclick="handleGetStarted()" class="cta-button">
+                Start Free →
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Timeline Navigation
+    const timelineNavBtns = document.querySelectorAll('.timeline-nav-btn');
+    const timelineCards = document.querySelectorAll('.timeline-card');
+    
+    timelineNavBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const year = this.getAttribute('data-year');
+            
+            // Update active nav button
+            timelineNavBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding timeline card
+            timelineCards.forEach(card => {
+                card.classList.remove('active');
+                if (card.id === `year-${year}`) {
+                    card.classList.add('active');
+                    
+                    // Smooth scroll to card
+                    card.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+                }
+            });
+        });
+    });
+    
+    // Section Navigation
+    const navLinks = document.querySelectorAll('.nav-sections a');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Active section highlighting
+    const sections = document.querySelectorAll('.story-sections > section');
+    
+    function highlightActiveSection() {
+        let current = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            
+            if (window.scrollY >= (sectionTop - 100)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', highlightActiveSection);
+    
+    // Sticky CTA
+    const stickyCta = document.getElementById('storyStickyCta');
+    let lastScrollTop = 0;
+    
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 500 && scrollTop > lastScrollTop) {
+            stickyCta.classList.add('show');
+        } else if (scrollTop < 100 || scrollTop < lastScrollTop) {
+            stickyCta.classList.remove('show');
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+    
+    // Image error handling
+    const founderImage = document.querySelector('.founder-image img');
+    if (founderImage) {
+        founderImage.addEventListener('error', function() {
+            this.src = 'https://i.pravatar.cc/300?img=11';
+        });
+    }
+    
+    // Animation for cards on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    // Observe cards for animation
+    document.querySelectorAll('.timeline-card, .insight-card, .principle-card, .stat-card, .value-card, .goal-card').forEach(card => {
+        observer.observe(card);
+    });
+});
+</script>
+
+<style>
+/* STORY PAGE STYLES */
+.story-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    position: relative;
+}
+
+/* Fixed Navigation */
+.story-nav-bar {
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav-home {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.nav-sections {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-sections a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.2s;
+    font-size: 0.9rem;
+}
+
+.nav-sections a:hover,
+.nav-sections a.active {
+    color: #3b82f6;
+}
+
+.nav-sections a.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #3b82f6;
+}
+
+.nav-top {
+    background: #f1f5f9;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #475569;
+    transition: all 0.2s;
+}
+
+.nav-top:hover {
+    background: #e2e8f0;
+}
+
+/* Hero Section */
+.story-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+}
+
+.story-hero h1 {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+
+.hero-quote {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    border-left: 4px solid #667eea;
+    border-radius: 0.5rem;
+}
+
+.hero-quote blockquote {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: #1e293b;
+    font-style: italic;
+    margin: 0 0 1rem 0;
+}
+
+.quote-author {
+    text-align: center;
+    color: #64748b;
+}
+
+.author-name {
+    font-weight: 600;
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.author-role {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+/* Section Header */
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* Journey Section */
+.journey-section {
+    margin-bottom: 4rem;
+}
+
+/* Timeline Navigation */
+.timeline-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.timeline-nav-btn {
+    padding: 0.75rem 1.5rem;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.timeline-nav-btn:hover {
+    background: #e2e8f0;
+}
+
+.timeline-nav-btn.active {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Timeline Content */
+.timeline-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline-card {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.timeline-card.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.timeline-marker {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.marker-year {
+    background: #3b82f6;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.marker-line {
+    flex: 1;
+    height: 2px;
+    background: #e2e8f0;
+}
+
+.card-content {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.card-body {
+    color: #475569;
+    line-height: 1.6;
+}
+
+.card-body p {
+    margin-bottom: 1.5rem;
+}
+
+/* Challenges */
+.challenges h4 {
+    color: #1e293b;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.challenge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.challenge-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #475569;
+}
+
+.challenge-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* Insights Grid */
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.insight-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.insight-card.visible {
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.insight-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.insight-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.insight-card h5 {
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.insight-card p {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* Principles */
+.principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.principle-card {
+    background: rgba(102, 126, 234, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.principle-card:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.principle-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.principle-card h5 {
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.principle-card p {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* Impact Stats */
+.impact-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3b82f6;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+/* Impact Stories */
+.impact-stories h4 {
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.impact-stories ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.impact-stories li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+}
+
+.impact-stories li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #10b981;
+    font-weight: bold;
+}
+
+/* Timeline Quotes */
+.timeline-quote {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(102, 126, 234, 0.05);
+    border-left: 3px solid #667eea;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.timeline-quote p {
+    color: #667eea;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Founder Section */
+.founder-section {
+    margin-bottom: 4rem;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 1rem;
+}
+
+.founder-profile {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 3rem;
+    align-items: start;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.image-container {
+    position: relative;
+}
+
+.image-container img {
+    width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.image-badge {
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3b82f6;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.founder-details h3 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.founder-title {
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.founder-bio {
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.founder-bio p {
+    margin-bottom: 1rem;
+}
+
+/* Values Grid */
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.value-item {
+    padding: 1rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+}
+
+.value-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.value-item h5 {
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+}
+
+.value-item p {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.founder-contact h4 {
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.contact-links {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.contact-links a {
+    padding: 0.5rem 1rem;
+    background: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    transition: background 0.2s;
+}
+
+.contact-links a:hover {
+    background: #2563eb;
+}
+
+/* Team Section */
+.team-section {
+    margin-bottom: 4rem;
+}
+
+.team-values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.value-card {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+}
+
+.value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.value-card h4 {
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+}
+
+.value-card p {
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Vision Section */
+.vision-section {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 1rem;
+    padding: 3rem;
+    margin-bottom: 4rem;
+}
+
+.vision-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.vision-statement {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.vision-statement strong {
+    color: #ffd700;
+}
+
+.vision-goals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.goal-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.goal-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.goal-card h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.goal-card p {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 0.875rem;
+}
+
+.vision-cta {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vision-cta h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.vision-cta p {
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-primary, .cta-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border: none;
+}
+
+.cta-primary {
+    background: white;
+    color: #667eea;
+}
+
+.cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cta-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+/* Sticky CTA */
+.sticky-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 90;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sticky-cta.show {
+    transform: translateY(0);
+}
+
+.sticky-cta .cta-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cta-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.cta-text strong {
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
+.cta-text span {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.sticky-cta .cta-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background 0.2s;
+}
+
+.sticky-cta .cta-button:hover {
+    background: #2563eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .story-nav-bar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 0.5rem;
+    }
+    
+    .nav-sections {
+        order: 1;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .nav-home, .nav-top {
+        order: 2;
+    }
+    
+    .story-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-quote {
+        padding: 1.5rem;
+    }
+    
+    .hero-quote blockquote {
+        font-size: 1.1rem;
+    }
+    
+    .founder-profile {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+    
+    .image-container {
+        max-width: 250px;
+        margin: 0 auto;
+    }
+    
+    .values-grid, .team-values, .vision-goals {
+        grid-template-columns: 1fr;
+    }
+    
+    .insights-grid, .principles {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .timeline-nav {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 0.5rem;
+    }
+    
+    .timeline-nav-btn {
+        flex-shrink: 0;
+    }
+    
+    .sticky-cta .cta-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .vision-section {
+        padding: 2rem 1rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-primary, .cta-secondary {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .story-hero h1 {
+        font-size: 1.75rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .card-content {
+        padding: 1.5rem;
+    }
+    
+    .insights-grid, .principles {
+        grid-template-columns: 1fr;
+    }
+    
+    .impact-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-links {
+        flex-direction: column;
+    }
+    
+    .contact-links a {
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}
