@@ -20,9 +20,6 @@ import uuid
 import json
 from datetime import datetime, timedelta
 
-
-
-
 # ======================================================
 # APP INIT
 # ======================================================
@@ -32,34 +29,19 @@ app = Flask(__name__)
 # ======================================================
 # FIREBASE CONFIG
 # ======================================================
-# ======================================================
-# FIREBASE CONFIG
-# ======================================================
-import os
-
-firebase_key = os.environ.get("FIREBASE_KEY")
-
-if not firebase_key:
-    raise ValueError("FIREBASE_KEY environment variable not set")
-
-cred_dict = json.loads(firebase_key)
-cred = credentials.Certificate(cred_dict)
-
+cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-
-
 # ======================================================
-# TODO: LOAD MODEL - Currently disabled for safe deployment
+# LOAD MODEL
 # ======================================================
-# print("[INIT] Loading TensorFlow Hub model...")
-# model = hub.load(
-#     "https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/feature_vector/5"
-# )
-# print("[READY] Model loaded successfully.")
-model = None  # Placeholder
+print("[INIT] Loading TensorFlow Hub model...")
+model = hub.load(
+    "https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/feature_vector/5"
+)
+print("[READY] Model loaded successfully.")
 
 
 # ======================================================
@@ -103,14 +85,12 @@ def refresh_full_item_cache():
                 item_id = item_doc.id
                 item_name = item_data.get("name", "Unnamed")
 
-                # TODO: Re-enable embeddings when needed
                 # Get embeddings (if any)
-                # embeddings = []
-                # for emb_doc in item_doc.reference.collection("embeddings").stream():
-                #     vector = emb_doc.to_dict().get("vector")
-                #     if vector:
-                #         embeddings.append(np.array(vector))
-                embeddings = []  # Placeholder - no embeddings for now
+                embeddings = []
+                for emb_doc in item_doc.reference.collection("embeddings").stream():
+                    vector = emb_doc.to_dict().get("vector")
+                    if vector:
+                        embeddings.append(np.array(vector))
 
                 # Get batches for this item (NEW: batch breakdown)
                 batches = item_data.get("batches", [])
@@ -201,7 +181,7 @@ def refresh_full_item_cache():
                     "stock": effective_stock,
                     "base_unit": item_data.get("baseUnit", "unit"),
                     "embeddings": embeddings,
-                    "has_embeddings": False,  # TODO: Set to len(embeddings) > 0 when re-enabling embeddings
+                    "has_embeddings": len(embeddings) > 0,
                     "selling_units": selling_units,
                     "category_id": category_entry["category_id"],
                     "category_name": category_entry["category_name"],
@@ -364,13 +344,167 @@ def allocate_selling_unit_fifo(batch_links, requested_units, conversion_factor):
     
     return {"success": True, "allocation": allocation, "total_price": total_price}
 
+# PLANS
+PLANS_CONFIG = {
+    "SOLO": {
+        "id": "SOLO",
+        "name": "Solo",
+        "staff_limit": 0,
+        "price_kes": 0,
+        "description": "Perfect for individual entrepreneurs",
+        "features": [
+            {"text": "1 seat only (owner)", "included": True},
+            {"text": "Up to 50 items", "included": True},
+            {"text": "Basic stock tracking", "included": True},
+            {"text": "Mobile app access", "included": True},
+            {"text": "No concurrent staff access", "included": False},
+            {"text": "No priority support", "included": False}
+        ],
+        "button_text": "Start Free Forever",
+        "button_class": "btn-free",
+        "best_for": "Perfect for individual entrepreneurs"
+    },
+    "BASIC": {
+        "id": "BASIC",
+        "name": "Basic",
+        "staff_limit": 5,
+        "price_kes": 250,
+        "description": "Small business with employees",
+        "features": [
+            {"text": "Up to 5 concurrent seats", "included": True},
+            {"text": "Up to 200 items", "included": True},
+            {"text": "Basic staff access", "included": True},
+            {"text": "Stock alerts", "included": True},
+            {"text": "WhatsApp support", "included": True},
+            {"text": "Data backup", "included": True}
+        ],
+        "button_text": "Pay via M-Pesa",
+        "button_class": "btn-primary",
+        "best_for": "Best for: Family shops & startups"
+    },
+    "TEAM": {
+        "id": "TEAM",
+        "name": "Team",
+        "staff_limit": 10,
+        "price_kes": 500,
+        "description": "Growing business with team",
+        "features": [
+            {"text": "3-5 concurrent seats", "included": True},
+            {"text": "Up to 500 items", "included": True},
+            {"text": "Multiple staff roles (RBAC)", "included": True},
+            {"text": "Sales reports & analytics", "included": True},
+            {"text": "Data export (CSV/Excel)", "included": True},
+            {"text": "Priority WhatsApp support", "included": True}
+        ],
+        "button_text": "Pay via M-Pesa",
+        "button_class": "btn-primary btn-featured",
+        "best_for": "Best value for growing businesses",
+        "featured": True
+    },
+    "BUSINESS": {
+        "id": "BUSINESS",
+        "name": "Business",
+        "staff_limit": 20,
+        "price_kes": 1000,
+        "description": "Multiple counters/locations",
+        "features": [
+            {"text": "6-10 concurrent seats", "included": True},
+            {"text": "Unlimited items", "included": True},
+            {"text": "Advanced analytics dashboard", "included": True},
+            {"text": "Multi-location support", "included": True},
+            {"text": "Custom categories", "included": True},
+            {"text": "24/7 phone support", "included": True}
+        ],
+        "button_text": "Pay via M-Pesa",
+        "button_class": "btn-primary",
+        "best_for": "For established businesses"
+    },
+    "ENTERPRISE": {
+        "id": "ENTERPRISE",
+        "name": "Enterprise",
+        "staff_limit": 50,
+        "price_kes": 3000,
+        "description": "Supermarkets & large operations",
+        "features": [
+            {"text": "11-20+ concurrent seats", "included": True},
+            {"text": "Unlimited everything", "included": True},
+            {"text": "API access", "included": True},
+            {"text": "Dedicated account manager", "included": True},
+            {"text": "Custom feature requests", "included": True},
+            {"text": "On-site training available", "included": True}
+        ],
+        "button_text": "Contact Us",
+        "button_class": "btn-enterprise",
+        "best_for": "Custom solutions available"
+    }
+}
+
 # ======================================================
 # ROUTES
 # ======================================================
+# Option 3: Simple individual routes (recommended for clarity)
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template(
+        "home.html",
+        title="Superkeeper - Inventory POS for Small Businesses",
+        meta_desc="Mobile-first POS and inventory for small businesses. Start free, upgrade as you grow.",
+        active_page="home"
+    )
 
+@app.route("/features")
+def features():
+    return render_template(
+        "features.html",
+        title="Features - Superkeeper",
+        meta_desc="Everything you need, nothing you don't. Mobile-first POS, staff control, alerts, and more.",
+        active_page="features"
+    )
+
+@app.route("/pricing")
+def pricing():
+    # Calculate annual discounts
+    annual_discounts = []
+    for plan_id, plan in PLANS_CONFIG.items():
+        if plan["price_kes"] > 0 and plan_id != "ENTERPRISE":
+            annual_price = plan["price_kes"] * 12
+            discounted_price = int(annual_price * 0.8)
+            savings = annual_price - discounted_price
+            
+            annual_discounts.append({
+                "plan_name": plan["name"],
+                "old_price": annual_price,
+                "new_price": discounted_price,
+                "savings": savings
+            })
+    
+    return render_template(
+        "pricing.html",
+        title="Pricing - Superkeeper",
+        meta_desc="Simple, seat-based pricing. Start free, upgrade as you grow.",
+        active_page="pricing",
+        plans=PLANS_CONFIG.values(),  # Pass all plans to template
+        annual_discounts=annual_discounts,
+        featured_plan="TEAM"
+    )
+
+@app.route("/testimonials")
+def testimonials():
+    return render_template(
+        "testimonials.html",
+        title="Success Stories - Superkeeper",
+        meta_desc="Real results from real shops. See how Superkeeper helps small businesses.",
+        active_page="testimonials"
+    )
+
+@app.route("/story")
+def story():
+    return render_template(
+        "story.html",
+        title="Our Story - Superkeeper",
+        meta_desc="How Superkeeper was built for small businesses with big dreams.",
+        active_page="story"
+    )
 
 @app.route("/dashboard")
 def dashboard():
@@ -378,14 +512,10 @@ def dashboard():
 
 
 # ======================================================
-# TODO: VECTORIZE ITEM (STOCK IMAGE → EMBEDDING) - Currently disabled
+# VECTORIZE ITEM (STOCK IMAGE → EMBEDDING)
 # ======================================================
 @app.route("/vectorize-item", methods=["POST"])
 def vectorize_item():
-    """
-    TODO: Re-enable image vectorization when needed
-    Currently returns placeholder response
-    """
     try:
         data = request.get_json(force=True)
 
@@ -403,19 +533,31 @@ def vectorize_item():
         if missing:
             return jsonify({"status": "error", "missing_fields": missing}), 400
 
-        print(f"📥 /vectorize-item → {data['item_id']} image {data['image_index']} (DISABLED)")
-        
-        # TODO: Re-enable image processing and embedding generation
-        # response = requests.get(data["image_url"], timeout=10)
-        # img = Image.open(BytesIO(response.content)).convert("RGB")
-        # img = img.resize((224, 224))
-        # vector = generate_embedding(np.array(img))
-        
-        # Placeholder: Return success without actual processing
+        print(f"📥 /vectorize-item → {data['item_id']} image {data['image_index']}")
+
+        response = requests.get(data["image_url"], timeout=10)
+        img = Image.open(BytesIO(response.content)).convert("RGB")
+        img = img.resize((224, 224))
+
+        vector = generate_embedding(np.array(img))
+
+        db.collection("Shops") \
+            .document(data["shop_id"]) \
+            .collection("categories") \
+            .document(data["category_id"]) \
+            .collection("items") \
+            .document(data["item_id"]) \
+            .collection("embeddings") \
+            .document(str(data["image_index"])) \
+            .set({
+                "vector": vector.tolist(),
+                "model": "mobilenet_v2_100_224",
+                "updatedAt": firestore.SERVER_TIMESTAMP,
+            })
+
         return jsonify({
             "status": "success",
-            "embedding_length": 0,
-            "note": "Vectorization disabled - placeholder response"
+            "embedding_length": len(vector),
         })
 
     except Exception as e:
@@ -424,7 +566,7 @@ def vectorize_item():
 
 
 # ======================================================
-# BATCH-AWARE SALES SEARCH ROUTE (READ-ONLY)
+# ======================================================
 # BATCH-AWARE SALES SEARCH ROUTE WITH FIXED CONVERSION LOGIC
 @app.route("/sales", methods=["POST"])
 def sales():
@@ -1314,8 +1456,7 @@ def item_optimization():
             "items_with_batches": items_with_batches,
             "items_without_batches": items_without_batches,
             "percentage_with_batches": round(items_with_batches / (items_with_batches + items_without_batches) * 100, 1) if (items_with_batches + items_without_batches) > 0 else 0
-        },
-        "note": "Embedding-based optimization disabled"
+        }
     })
 
 
@@ -1354,9 +1495,7 @@ def debug_cache():
                 "has_batches": first_item.get("has_batches", False),
                 "batch_count": len(first_item.get("batches", [])),
                 "has_selling_units": len(first_item.get("selling_units", [])) > 0,
-                "selling_units_count": len(first_item.get("selling_units", [])),
-                "has_embeddings": first_item.get("has_embeddings", False),  # Will be False since disabled
-                "embeddings_count": len(first_item.get("embeddings", []))
+                "selling_units_count": len(first_item.get("selling_units", []))
             },
             "cache_details": {
                 "total_shops": len(embedding_cache_full["shops"]),
@@ -1365,12 +1504,14 @@ def debug_cache():
                 "total_selling_units": total_selling_units,
                 "total_batches": total_batches,
                 "items_with_batches": items_with_batches,
-                "last_updated": embedding_cache_full["last_updated"],
-                "note": "Embedding cache disabled - storing only metadata"
+                "last_updated": embedding_cache_full["last_updated"]
             }
         })
     except (IndexError, KeyError) as e:
         return jsonify({"error": f"Cache structure issue: {str(e)}"}), 500
+
+
+
 
 
 # ======================================================
@@ -1492,7 +1633,6 @@ def test_selling_units():
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 # ======================================================
 # STARTUP INITIALIZATION (SAFE) AND RUNNING THE SERVER
