@@ -29,7 +29,20 @@ app = Flask(__name__)
 # ======================================================
 # FIREBASE CONFIG
 # ======================================================
-cred = credentials.Certificate("serviceAccountKey.json")
+import os
+import json
+import firebase_admin
+from firebase_admin import credentials
+
+if not firebase_admin._apps:
+    firebase_key = os.environ.get("FIREBASE_KEY")
+
+    if not firebase_key:
+        raise ValueError("FIREBASE_KEY environment variable not set")
+
+    cred = credentials.Certificate(json.loads(firebase_key))
+    firebase_admin.initialize_app(cred)
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
