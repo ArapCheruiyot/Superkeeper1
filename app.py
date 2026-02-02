@@ -49,12 +49,13 @@ db = firestore.client()
 # ======================================================
 # LOAD MODEL
 # ======================================================
+"""
 print("[INIT] Loading TensorFlow Hub model...")
 model = hub.load(
     "https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/feature_vector/5"
 )
 print("[READY] Model loaded successfully.")
-
+"""
 
 # ======================================================
 # FULL SHOP CACHE (STRICTLY PER SHOP) - UPDATED WITH BATCH TRACKING
